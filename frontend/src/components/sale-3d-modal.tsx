@@ -50,16 +50,19 @@ export function Sale3DModal({ isOpen, onClose }: Sale3DModalProps) {
           </Button>
         </div>
         
-        <div className="flex-1 relative">
+        <div className="flex-1 relative bg-gray-100 flex items-center justify-center">
+          <div className="text-muted-foreground text-sm">3D Preview Disabled for Testing</div>
+          {/* ORIGINAL THREE.JS CODE - DISABLED FOR TESTING
           <Canvas camera={{ position: [0.028, 0.02, 0.04], fov: 50, near: 0.01 }}>
             <Suspense fallback={<LoadingSpinner />}>
               <ambientLight intensity={0.5} />
               <directionalLight position={[10, 10, 5]} intensity={1} />
-              {/* <PorscheModel /> DISABLED FOR TESTING */}
+              <PorscheModel />
               <OrbitControls enableZoom={false} enablePan={true} enableRotate={true} minDistance={0.001} />
               <Environment preset="sunset" />
             </Suspense>
           </Canvas>
+          */}
         </div>
 
         <div className="p-4 border-t bg-gray-50">

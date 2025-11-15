@@ -20,7 +20,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined)
 const defaultUser: User = {
   id: "1",
   email: "user@beesaver.com",
-  name: "Alex",
+  name: "Ms. bee",
   currentBadge: null,
   badges: [],
   coin: 250,

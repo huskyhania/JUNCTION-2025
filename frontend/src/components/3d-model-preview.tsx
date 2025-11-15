@@ -6,7 +6,7 @@ import { Html } from "@react-three/drei"
 import { cn } from "@/lib/utils"
 
 // Preload the Shiba model
-useGLTF.preload("/assets/shiba.glb")
+// useGLTF.preload("/assets/shiba.glb") // DISABLED FOR TESTING
 
 function LoadingSpinner() {
   return (
@@ -28,6 +28,13 @@ interface Model3DPreviewProps {
 }
 
 export function Model3DPreview({ className }: Model3DPreviewProps) {
+  // DISABLED FOR TESTING - Three.js disabled
+  return (
+    <div className={cn("bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center", className)}>
+      <div className="text-white/50 text-sm">3D Preview Disabled</div>
+    </div>
+  )
+  /* ORIGINAL THREE.JS CODE - DISABLED FOR TESTING
   return (
     <div className={cn("bg-transparent", className)}>
       <Canvas camera={{ position: [0, 0, 4], fov: 50, near: 0.01 }} gl={{ alpha: true, antialias: true }}>
@@ -41,5 +48,6 @@ export function Model3DPreview({ className }: Model3DPreviewProps) {
       </Canvas>
     </div>
   )
+  */
 }
 
