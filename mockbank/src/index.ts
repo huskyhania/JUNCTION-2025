@@ -2,10 +2,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import cors from "cors";
 import { PrismaClient, Prisma } from "@prisma/client";
 
 const app = express();
 const prisma = new PrismaClient();
+const allowedOrigins =
+  process.env.ALLOWED_ORIGINS?.split(",").map((origin) => origin.trim()) ??
+  true;
 
 const PORT = 3001;
 
@@ -80,6 +84,39 @@ const normalizeMetadata = (
 };
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
+app.use((req, res, next) => {
+  const origin = req.header("Origin");
+  if (origin && Array.isArray(allowedOrigins)) {
+    if (allowedOrigins.includes(origin)) {
+      res.header("Access-Control-Allow-Origin", origin);
+    }
+  } else if (allowedOrigins === true) {
+    res.header("Access-Control-Allow-Origin", "*");
+  }
+
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "MockBank" });

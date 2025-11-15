@@ -1,7 +1,27 @@
 import { type Payment } from "./columns";
+const BACKEND_API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3000";
+const MOCKBANK_USER_ID =
+  import.meta.env.VITE_MOCKBANK_USER_ID || "demo1";
+
+type MockbankTransaction = {
+  id: string;
+  amount: number;
+  status?: string;
+  description?: string | null;
+  date: string;
+  category?: string | null;
+  merchant?: string | null;
+};
+
+// Sample pay
 
 // Sample payment data - November 2025 (today is Nov 15, 2025)
 export const paymentsData: Payment[] = [
+
+ment data used as fallback when the MockBank API is unavailable.
+const STATIC_PAYMENTS: Payment[] = [
+
   // Food category
   { id: "1", amount: 100.0, status: "pending", description: "Grocery Store", date: "2025-11-15", category: "Food" },
   { id: "4", amount: 75.25, status: "failed", description: "Coffee Shop", date: "2025-11-12", category: "Food" },
@@ -85,4 +105,135 @@ export const paymentsData: Payment[] = [
 
   { id: "61", amount: 78.78, status: "success", description: "movie", date: "2025-11-06", category: "Entertainment" },
 ];
+
+const normalizeDate = (value: string): string => {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return value;
+  }
+  return parsed.toISOString().split("T")[0]!;
+};
+
+const mapTransaction = (tx: MockbankTransaction): Payment => {
+  const description =
+    tx.description?.trim() ||
+    tx.merchant?.trim() ||
+    tx.category?.toString() ||
+    "Transaction";
+
+  const status: Payment["status"] =
+    tx.amount >= 0 ? "success" : "processing";
+
+  return {
+    id: tx.id,
+    amount: Math.abs(tx.amount),
+    status,
+    description,
+    date: normalizeDate(tx.date),
+    category: tx.category ?? undefined,
+  };
+};
+
+const harmonizeWithStaticTemplate = (transactions: Payment[]): Payment[] => {
+  const categorized = new Map<string, Payment[]>();
+  for (const tx of transactions) {
+    const group = tx.category ?? "Other";
+    if (!categorized.has(group)) {
+      categorized.set(group, []);
+    }
+    categorized.get(group)!.push(tx);
+  }
+
+  for (const bucket of categorized.values()) {
+    bucket.sort(
+      (a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }
+
+  const consumed = new Set<string>();
+  const projected = STATIC_PAYMENTS.map((template) => {
+    const category = template.category ?? "Other";
+    const bucket = categorized.get(category);
+    if (bucket && bucket.length) {
+      const tx = bucket.shift()!;
+      consumed.add(tx.id);
+      return {
+        ...template,
+        id: tx.id,
+        amount: tx.amount,
+        status: tx.status,
+        date: tx.date,
+        description: tx.description ?? template.description,
+        category: template.category,
+      };
+    }
+    return { ...template };
+  });
+
+  for (const tx of transactions) {
+    if (!consumed.has(tx.id)) {
+      projected.push(tx);
+    }
+  }
+
+  return projected;
+};
+
+const INSIGHTS_LOOKBACK_DAYS = 30;
+
+const selectRecentTransactions = (
+  transactions: Payment[],
+  days = INSIGHTS_LOOKBACK_DAYS
+): Payment[] => {
+  if (!transactions.length || days <= 0) {
+    return transactions;
+  }
+
+  const now = Date.now();
+  const threshold = now - days * 24 * 60 * 60 * 1000;
+
+  return transactions.filter((tx) => {
+    const timestamp = new Date(tx.date).getTime();
+    if (Number.isNaN(timestamp)) {
+      return false;
+    }
+    return timestamp >= threshold;
+  });
+};
+
+async function fetchFromMockbank(): Promise<Payment[]> {
+  try {
+    const response = await fetch(
+      `${BACKEND_API_URL}/api/mockbank/users/${encodeURIComponent(
+        MOCKBANK_USER_ID
+      )}/transactions`
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `MockBank request failed with status ${response.status}`
+      );
+    }
+
+    const payload = await response.json();
+    if (!payload || !Array.isArray(payload.transactions)) {
+      throw new Error("MockBank response missing transactions array");
+    }
+
+    const mapped = payload.transactions.map(mapTransaction);
+    return harmonizeWithStaticTemplate(mapped);
+  } catch (err) {
+    console.warn(
+      "Falling back to bundled payment data because MockBank could not be reached:",
+      err
+    );
+    return STATIC_PAYMENTS.map((payment) => ({ ...payment }));
+  }
+}
+
+const resolvedPayments = await fetchFromMockbank();
+export const paymentsData: Payment[] = resolvedPayments;
+export const insightsTransactions: Payment[] =
+  selectRecentTransactions(resolvedPayments);
 
