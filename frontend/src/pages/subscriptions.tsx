@@ -115,9 +115,9 @@ export default function Subscriptions() {
       </div>
 
       {/* Savings Tip */}
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl">
+      <div className="bg-yellow-50 p-4 rounded-xl">
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+          <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
           <div>
             <h3 className="font-semibold text-foreground mb-1">Savings Tip</h3>
             <p className="text-sm text-muted-foreground">

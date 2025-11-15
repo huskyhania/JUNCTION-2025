@@ -33,7 +33,7 @@ export function TrendIndicators() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className={`text-sm font-semibold ${trend.isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+              <span className={`text-sm font-semibold ${trend.isPositive ? "text-green-600" : "text-red-600"}`}>
                 {trend.isPositive ? "↓" : "↑"} {Math.abs(trend.change)}%
               </span>
               <ArrowRight className="h-4 w-4 text-muted-foreground" />

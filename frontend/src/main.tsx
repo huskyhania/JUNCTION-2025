@@ -21,6 +21,7 @@ import MoneyStory from './pages/money-story.tsx'
 import Transactions from './pages/transactions.tsx'
 import Insight from './pages/insight.tsx'
 import Game from './pages/game.tsx'
+import Store from './pages/store.tsx'
 import { Layout } from './components/layout'
 import { UserProvider } from './contexts/UserContext'
 
@@ -43,6 +44,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/insight" element={<Insight />} />
             <Route path="/game" element={<Game />} />
+            <Route path="/store" element={<Store />} />
           </Route>
         </Routes>
       </BrowserRouter>

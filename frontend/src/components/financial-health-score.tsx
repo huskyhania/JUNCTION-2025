@@ -2,8 +2,8 @@ import { Heart, TrendingUp } from "lucide-react"
 
 export function FinancialHealthScore() {
   const score = 78 // Out of 100
-  const scoreColor = score >= 80 ? "text-green-600 dark:text-green-400" : score >= 60 ? "text-yellow-600 dark:text-yellow-400" : "text-red-600 dark:text-red-400"
-  const scoreBg = score >= 80 ? "bg-green-100 dark:bg-green-900/30" : score >= 60 ? "bg-yellow-100 dark:bg-yellow-900/30" : "bg-red-100 dark:bg-red-900/30"
+  const scoreColor = score >= 80 ? "text-green-600" : score >= 60 ? "text-yellow-600" : "text-red-600"
+  const scoreBg = score >= 80 ? "bg-green-100" : score >= 60 ? "bg-yellow-100" : "bg-red-100"
 
   const factors = [
     { label: "Savings Rate", value: "25%", status: "good" },
@@ -20,7 +20,7 @@ export function FinancialHealthScore() {
       
       <div className="flex flex-col items-center justify-center py-4">
         <div className={`relative w-32 h-32 rounded-full ${scoreBg} flex items-center justify-center mb-4`}>
-          <div className="absolute inset-0 rounded-full border-8 border-gray-200 dark:border-gray-700"></div>
+          <div className="absolute inset-0 rounded-full border-8 border-gray-200"></div>
           <div
             className="absolute inset-0 rounded-full border-8 border-transparent transition-all duration-500"
             style={{
