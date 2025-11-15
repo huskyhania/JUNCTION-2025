@@ -2,7 +2,25 @@
 
 const fastify = require('fastify')();
 const OpenAI = require("openai");
+
+
 require("dotenv").config();
+
+
+let GoogleGenerativeAI;
+
+try {
+  const pkg = require("@google/generative-ai");
+  GoogleGenerativeAI = pkg.GoogleGenerativeAI || pkg.default;
+  console.log("Gemini loaded OK");
+} catch (e) {
+  console.error("Gemini load FAILED:", e);
+}
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const geminiModel = genAI.getGenerativeModel({
+  model: "gemini-2.0-flash"
+});
 
 console.log('wtf: ', process.env.API_KEY);
 
@@ -86,6 +104,76 @@ Return ONLY a valid JSON array of insights, no other text. Example format:
     }
   });
 
+  fastify.post('/api/gemini', async (request, reply) => {
+    try {
+      const { prompt } = request.body;
+  
+      const result = await geminiModel.generateContent({
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: prompt }]
+          }
+        ]
+      });
+  
+      const aiReply =
+        result.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "No response";
+  
+      return { reply: aiReply };
+  
+    } catch (err) {
+      console.error("Gemini Error:", err);
+      return reply.status(500).send({ error: err.message });
+    }
+  });  
+
+  const { generateScenario } = require("./gameAI");
+
+  fastify.post("/api/game/new", async (req, reply) => {
+    try {
+      console.log("➡️ /api/game/new called");
+      const userProfile = req.body.userProfile || {};
+      console.log("User profile:", userProfile);
+  
+      const scenario = await generateScenario(userProfile);
+  
+      console.log("✅ Scenario generated");
+      return { scenario };
+    } catch (err) {
+      console.error("Game Error:", err);
+      reply.status(500).send({ error: err.message });
+    }
+  });
+
+  fastify.post("/api/game/choose", async (req, reply) => {
+    try {
+      const { scenario, choiceIndex } = req.body;
+  
+      if (!scenario || choiceIndex === undefined) {
+        return reply.status(400).send({ error: "scenario + choiceIndex required" });
+      }
+  
+      const consequences = scenario.consequences[String(choiceIndex)];
+  
+      const unlocked = [];
+  
+      // Example: Unlock achievements
+      if (choiceIndex === 0) unlocked.push("SMART_SAVER");
+      if (choiceIndex === 1) unlocked.push("DEBT_RISK_TAKER");
+  
+      return {
+        consequences,
+        learningTip: scenario.learningTip,
+        unlocked,
+      };
+    } catch (err) {
+      console.error("Error choosing:", err);
+      reply.status(500).send({ error: err.message });
+    }
+  });
+
   fastify.get('/', { websocket: true }, (socket, req) => {
     console.log("New connection!");
 
@@ -95,34 +183,49 @@ Return ONLY a valid JSON array of insights, no other text. Example format:
 
     socket.on('message', async (rawMsg) => {
       try {
-        console.log("Sending api call to ai");
-        const userMessage = rawMsg.toString();
-
+        const message = rawMsg.toString();
+    
+        // SPECIAL TRIGGER: If message starts with "gemini:"
+        if (message.startsWith("gemini:")) {
+          const geminiPrompt = message.replace("gemini:", "").trim();
+    
+          const result = await geminiModel.generateContent({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: geminiPrompt }]
+              }
+            ]
+          });
+    
+          const geminiReply =
+            result.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+            "No response from Gemini";
+    
+          socket.send("[Gemini] " + geminiReply);
+          return;
+        }
+    
+        // Otherwise: use your *existing* Featherless/OpenAI model
         const client = new OpenAI({
           apiKey: process.env.API_KEY,
-          baseURL: "https://api.featherless.ai/v1"   // Example Featherless URL — change if needed
+          baseURL: "https://api.featherless.ai/v1"
         });
-
+    
         const response = await client.chat.completions.create({
           model: "meta-llama/Meta-Llama-3.1-8B-Instruct",
           messages: [
-            { role: "teach for a child", content: userMessage }
+            { role: "user", content: message }
           ]
         });
-
-        const aiReply = response.choices[0].message?.content || "No response";
-
-        console.log("AI Reply:");
-        console.log(aiReply);
-
-        socket.send(aiReply);
-
+    
+        socket.send("[Llama] " + (response.choices[0].message?.content || "No response"));
+    
       } catch (err) {
-        console.error("Error:", err);
-        socket.send("Server error: " + err.message);
+        console.error("WS Error:", err);
+        socket.send("Error: " + err.message);
       }
-    });
-
+    });    
   });
 
 });

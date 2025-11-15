@@ -36,8 +36,8 @@ const navigation = [
     icon: MessageSquare,
   },
   {
-    name: "Quiz",
-    href: "/quiz",
+    name: "Game",
+    href: "/game",
     icon: BookOpen,
   }
 ]
