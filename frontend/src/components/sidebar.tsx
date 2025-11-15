@@ -41,6 +41,11 @@ const sidebarSections = [
     href: "/spending-categories",
   },
   {
+    name: "Transactions Feed",
+    icon: List,
+    href: "/transactions",
+  },
+  {
     name: "Opportunity Cost Highlights",
     icon: Target,
     href: "/opportunity-cost",
@@ -66,11 +71,6 @@ const sidebarSections = [
     description: "Weekly Digest",
     icon: BookOpen,
     href: "/money-story",
-  },
-  {
-    name: "Transactions Feed",
-    icon: List,
-    href: "/transactions",
   },
 ]
 
@@ -151,7 +151,7 @@ export function Sidebar() {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    "flex flex-col gap-1 rounded-lg px-3 py-2 text-sm transition-colors",
+                    "flex flex-col gap-1 rounded-lg px-3 py-2 text-sm transition-colors min-h-[3.5rem] justify-center",
                     isActive
                       ? "border border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-semibold "
                       : "text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-200 hover:text-foreground"
@@ -178,7 +178,7 @@ export function Sidebar() {
             <Link
               to={insightOfTheDay.href}
               className={cn(
-                "flex flex-col gap-1 rounded-lg px-3 py-2 text-sm transition-colors",
+                "flex flex-col gap-1 rounded-lg px-3 py-2 text-sm transition-colors min-h-[3.5rem] justify-center",
                 "bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20",
                 "hover:from-yellow-500/20 hover:to-orange-500/20 hover:border-yellow-500/30",
                 location.pathname === insightOfTheDay.href && "from-yellow-500/20 to-orange-500/20 border-yellow-500/40"
