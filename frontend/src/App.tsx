@@ -31,6 +31,26 @@ export default function App() {
       >
         Start Learning
       </Link>
+        <Link
+        to="/chat"
+        className="
+          w-full 
+          max-w-xs
+          bg-blue-600 
+          hover:bg-blue-700 
+          text-white 
+          font-semibold 
+          py-3 
+          rounded-xl 
+          shadow-sm 
+          transition 
+          active:scale-95 
+          text-center 
+          block
+        "
+      >
+        Chat bot
+      </Link>
     </div>
   );
 }
