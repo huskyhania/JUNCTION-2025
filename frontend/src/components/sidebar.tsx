@@ -91,7 +91,7 @@ export function Sidebar() {
   }
 
   return (
-    <div className="flex h-screen w-72 flex-col bg-white shrink-0">
+    <div className="flex h-screen w-72 flex-col bg-background shrink-0">
       {/* App Name */}
       <div className="p-4">
         <Link to="/home" className="flex items-center">
@@ -108,8 +108,8 @@ export function Sidebar() {
               <AvatarFallback>AL</AvatarFallback>
             </Avatar>
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-sm font-semibold truncate">Alex</span>
-              <span className="text-xs text-muted-foreground truncate">user@beesaver.com</span>
+              <span className="text-sm font-semibold truncate">Ms. Bee</span>
+              <span className="text-xs text-muted-foreground truncate">msbee@beesaver.com</span>
             </div>
           </div>
           <DropdownMenu>

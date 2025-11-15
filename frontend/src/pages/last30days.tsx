@@ -22,10 +22,15 @@ function PorscheModel() {
 }
 
 export default function Last30DaysChart() {
+  // DISABLED FOR TESTING - Three.js disabled
   return (
     <div className=" rounded-xl h-80">
       {/* <h2 className="text-lg font-semibold mb-3">Last 30 Days Cashflow</h2> */}
       
+      <div className="w-full h-[400px] rounded-lg overflow-hidden relative bg-gray-100 flex items-center justify-center">
+        <div className="text-muted-foreground text-sm">3D Chart Disabled for Testing</div>
+      </div>
+      {/* ORIGINAL THREE.JS CODE - DISABLED FOR TESTING
       <div className="w-full h-[400px] rounded-lg overflow-hidden relative">
         <Canvas camera={{ position: [0.028, 0.02, 0.04], fov: 50, near: 0.01 }}>
           <Suspense fallback={<LoadingSpinner />}>
@@ -37,6 +42,7 @@ export default function Last30DaysChart() {
           </Suspense>
         </Canvas>
       </div>
+      */}
     </div>
   )
 }
