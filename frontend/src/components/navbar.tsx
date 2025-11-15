@@ -78,25 +78,26 @@ const sidebarSections = [
     href: "/money-story",
   },
   {
-    name: "Insight of the Day",
-    description: "AI",
-    icon: Lightbulb,
-    href: "/insight",
-  },
-  {
     name: "Transactions Feed",
     icon: List,
     href: "/transactions",
   },
 ]
 
+const insightOfTheDay = {
+  name: "Insight of the Day",
+  description: "AI",
+  icon: Lightbulb,
+  href: "/insight",
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
+    <header className="sticky top-0 z-40 w-full bg-gray-100">
+      <div className="container flex h-16 items-center justify-between px-10">
         <div className="flex items-center gap-6">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -108,7 +109,7 @@ export function Navbar() {
             <SheetContent side="left" className="w-72 p-0">
               <div className="flex h-full flex-col">
                 <div className="flex h-16 items-center border-b px-6">
-                  <h1 className="text-xl font-bold text-blue-600">Bee Save</h1>
+                  <h1 className="text-xl font-bold text-blue-600 pl-4">Bee Save</h1>
                 </div>
                 <div className="border-b p-4">
                   <div className="flex items-center gap-3">
@@ -122,8 +123,8 @@ export function Navbar() {
                     </div>
                   </div>
                 </div>
-                <div className="flex-1 overflow-y-auto">
-                  <nav className="space-y-1 p-4">
+                <div className="flex-1 overflow-y-auto flex flex-col">
+                  <nav className="space-y-1 p-4 flex-1">
                     {navigation.map((item) => {
                       const isActive = location.pathname === item.href
                       return (
@@ -174,13 +175,34 @@ export function Navbar() {
                       )
                     })}
                   </nav>
+                  
+                  {/* Insight of the Day - Highlighted at bottom */}
+                  <div className="mt-auto p-4 pt-0 border-t">
+                    <Link
+                      to={insightOfTheDay.href}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex flex-col gap-1 rounded-lg px-3 py-2 text-sm transition-colors",
+                        "bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20",
+                        "hover:from-yellow-500/20 hover:to-orange-500/20 hover:border-yellow-500/30",
+                        location.pathname === insightOfTheDay.href && "from-yellow-500/20 to-orange-500/20 border-yellow-500/40"
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <insightOfTheDay.icon className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+                        <span className="font-semibold text-foreground">{insightOfTheDay.name}</span>
+                      </div>
+                      {insightOfTheDay.description && (
+                        <span className="text-xs pl-6 text-muted-foreground">
+                          {insightOfTheDay.description}
+                        </span>
+                      )}
+                    </Link>
+                  </div>
                 </div>
               </div>
             </SheetContent>
           </Sheet>
-          <Link to="/home" className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-blue-600">Bee Save</h1>
-          </Link>
         </div>
         <nav className="hidden items-center gap-6 md:flex">
           {navigation.map((item) => {

@@ -20,7 +20,9 @@ export type Payment = {
   id: string
   amount: number
   status: "pending" | "processing" | "success" | "failed"
-  email: string
+  description: string
+  date: string
+  category?: string
 }
 
 export const columns: ColumnDef<Payment>[] = [
@@ -66,8 +68,19 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("description")}</div>
+    },
+  },
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => {
+      const date = row.getValue("date") as string
+      return <div className="text-muted-foreground">{date}</div>
+    },
   },
   {
     accessorKey: "amount",
@@ -94,7 +107,7 @@ export const columns: ColumnDef<Payment>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="bg-white">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}

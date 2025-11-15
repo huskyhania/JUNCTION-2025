@@ -46,7 +46,7 @@ export default function Home() {
     <div className="flex flex-col items-center p-6">
       <h1 className="text-3xl font-bold mb-4">AI Chat</h1>
 
-      <div className="w-full max-w-xl bg-white shadow rounded p-4 flex flex-col">
+      <div className="w-full max-w-xl bg-white shadow rounded-xl p-4 flex flex-col">
         {/* Message List */}
         <div className="flex-1 overflow-y-auto mb-4 h-96 border p-3 rounded bg-gray-50">
           {messages.map((m, i) => (
