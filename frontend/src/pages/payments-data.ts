@@ -81,5 +81,8 @@ export const paymentsData: Payment[] = [
   { id: "58", amount: 320.00, status: "success", description: "Hotel Booking", date: "2024-01-11", category: "Travel" },
   { id: "59", amount: 150.00, status: "success", description: "Travel Insurance", date: "2024-01-10", category: "Travel" },
   { id: "60", amount: 95.50, status: "success", description: "Car Rental", date: "2024-01-09", category: "Travel" },
+
+
+  { id: "61", amount: 78.78, status: "success", description: "movie", date: "2024-01-09", category: "Entertainment" },
 ];
 

@@ -95,7 +95,20 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
+    accessorKey: "category",
+    header: "Category",
+    cell: ({ row }) => {
+      const category = row.getValue("category") as string
+      return (
+        <div className="text-muted-foreground">
+          {category || "—"}
+        </div>
+      )
+    },
+  },
+  {
     id: "actions",
+    enableSorting: false,
     cell: ({ row }) => {
       const payment = row.original
 
