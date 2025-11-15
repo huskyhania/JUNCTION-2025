@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 const CURRENCIES = ["EUR"];
 const MERCHANTS = {
-  income: ["Employer Oy", "KesÃ¤tyÃ¶ Oy", "Freelance Client"],
+  income: ["Employer Oy", "Kesätyö Oy", "Freelance Client"],
   groceries: ["K-Market", "S-Market", "Lidl"],
   bnpl: ["Klarna", "Afterpay", "Walley"],
   subscription: ["Spotify", "Netflix", "Game Pass", "iCloud"],
@@ -18,49 +18,6 @@ const MERCHANTS = {
 const CATEGORIES = Object.keys(MERCHANTS) as Array<
   keyof typeof MERCHANTS
 >;
-
-type AiTemplate = {
-  prompt: string;
-  response: string;
-  model?: string | null;
-  metadata?: Prisma.JsonValue;
-};
-
-const AI_RESPONSE_TEMPLATES: AiTemplate[] = [
-  {
-    prompt:
-      "Give {{name}} a concise snapshot of their recent spending and savings progress.",
-    response:
-      "{{name}}, over the past month you've kept discretionary spending about 12% lower than average while still funding your savings goals. Keep directing at least 20% of income to savings to stay ahead of plan.",
-    model: "meta-llama/Meta-Llama-3.1-8B-Instruct",
-    metadata: {
-      tone: "supportive",
-      tags: ["summary", "savings"],
-    },
-  },
-  {
-    prompt:
-      "Recommend one actionable budgeting improvement for {{name}} based on their spending mix.",
-    response:
-      "Consider moving your entertainment budget from a flat amount to a 'three night rule'. Cap dining-out to three planned events per week and automatically sweep any leftover cash to your emergency fund.",
-    model: "meta-llama/Meta-Llama-3.1-8B-Instruct",
-    metadata: {
-      tone: "actionable",
-      tags: ["budget", "entertainment"],
-    },
-  },
-  {
-    prompt:
-      "Highlight a potential savings opportunity from recurring expenses for {{name}}.",
-    response:
-      "Your subscriptions have crept up to EUR 85/month. Audit the least-used ones this weekend - you could immediately reclaim about EUR 30 without losing value.",
-    model: "meta-llama/Meta-Llama-3.1-8B-Instruct",
-    metadata: {
-      tone: "urgent",
-      tags: ["subscriptions", "savings"],
-    },
-  },
-];
 
 function randomItem<T>(arr: T[]): T {
   if (arr.length === 0) {
@@ -83,7 +40,7 @@ function randomAmount(category: keyof typeof MERCHANTS): number {
   switch (category) {
     case "income":
       // salary / income
-      return 800 + Math.random() * 1500; // 800â€“2300
+      return 800 + Math.random() * 1500; // 800–2300
     case "groceries":
       return -(10 + Math.random() * 60); // -10 to -70
     case "bnpl":
@@ -97,10 +54,6 @@ function randomAmount(category: keyof typeof MERCHANTS): number {
     default:
       return -(5 + Math.random() * 50);
   }
-}
-
-function applyTemplate(text: string, name: string): string {
-  return text.replace(/{{name}}/gi, name);
 }
 
 async function createDemoUsers() {
@@ -164,7 +117,7 @@ async function createTransactionsForUser(
     const amount = randomAmount(category);
 
     // Make sure there's some regular "income" each month
-    // by forcing 1â€“2 income events per month
+    // by forcing 1–2 income events per month
     if (i % 35 === 0) {
       // salary-ish
       const salaryDate = new Date(
@@ -204,51 +157,8 @@ async function createTransactionsForUser(
   );
 }
 
-async function createAiResponses(
-  users: Array<{ id: string; name: string }>
-) {
-  const responses: Prisma.AiResponseCreateManyInput[] = users.flatMap(
-    (user, userIdx) =>
-      AI_RESPONSE_TEMPLATES.map((template, templateIdx) => {
-        const base: Prisma.AiResponseCreateManyInput = {
-          userId: user.id,
-          prompt: applyTemplate(template.prompt, user.name),
-          response: applyTemplate(template.response, user.name),
-          // `model` in your schema is likely String? â†’ string | null
-          model: template.model ?? null,
-          createdAt: new Date(
-            Date.now() - (userIdx * 3 + templateIdx) * 6 * 60 * 60 * 1000
-          ),
-        };
-
-        // Only add metadata if it exists; don't send null
-        if (template.metadata !== undefined) {
-          // we know template.metadata is a Prisma.JsonValue, which is valid here
-          (base as any).metadata = template.metadata;
-        }
-
-        return base;
-      })
-  );
-
-  if (responses.length === 0) {
-    return;
-  }
-
-  await prisma.aiResponse.createMany({
-    data: responses,
-  });
-
-  console.log(
-    `Created ${responses.length} AI responses across ${users.length} users.`
-  );
-}
-
-
-
 async function main() {
   console.log("Clearing old data...");
-  await prisma.aiResponse.deleteMany();
   await prisma.transaction.deleteMany();
   await prisma.user.deleteMany();
 
@@ -259,9 +169,6 @@ async function main() {
   for (const user of users) {
     await createTransactionsForUser(user.id, 6, 70); // 6 months, ~70 tx/month
   }
-
-  console.log("Creating AI response history...");
-  await createAiResponses(users);
 
   console.log("Done seeding mock bank data.");
   console.log(
@@ -278,3 +185,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+

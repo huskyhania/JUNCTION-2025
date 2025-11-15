@@ -2,12 +2,19 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const app = express();
 const prisma = new PrismaClient();
 
 const PORT = 3001;
+
+type AiResponsePayload = {
+  prompt?: unknown;
+  response?: unknown;
+  model?: unknown;
+  metadata?: unknown;
+};
 
 /**
  * Normalizes optional date query parameters.
@@ -34,6 +41,42 @@ const parseDateParam = (value: unknown): Date | undefined | null => {
   }
 
   return parsed;
+};
+
+const isNonEmptyString = (value: unknown): value is string =>
+  typeof value === "string" && value.trim().length > 0;
+
+const normalizeMetadata = (
+  value: unknown
+): Prisma.JsonValue | undefined => {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((entry) => normalizeMetadata(entry) ?? null);
+  }
+
+  if (typeof value === "object") {
+    const normalized: Record<string, Prisma.JsonValue> = {};
+    for (const [key, entry] of Object.entries(
+      value as Record<string, unknown>
+    )) {
+      normalized[key] = normalizeMetadata(entry) ?? null;
+    }
+    return normalized;
+  }
+
+  return undefined;
 };
 
 app.use(express.json());
@@ -97,6 +140,97 @@ app.get("/users/:userId/transactions", async (req, res) => {
   } catch (err) {
 	console.error("Error fetching transactions:", err);
 	res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/users/:userId/ai-responses", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+	const user = await prisma.user.findUnique({
+	  where: { id: userId },
+	  select: { id: true },
+	});
+
+	if (!user) {
+	  return res.status(404).json({ error: "User not found in mock bank" });
+	}
+
+	const responses = await prisma.aiResponse.findMany({
+	  where: { userId },
+	  orderBy: { createdAt: "desc" },
+	});
+
+	res.json({
+	  userId,
+	  count: responses.length,
+	  responses,
+	});
+  } catch (err) {
+	console.error("Error fetching AI responses:", err);
+	res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/users/:userId/ai-responses", async (req, res) => {
+  const { userId } = req.params;
+  const payload = req.body as AiResponsePayload;
+
+  const prompt = isNonEmptyString(payload.prompt)
+    ? payload.prompt.trim()
+    : null;
+
+  const responseText = isNonEmptyString(payload.response)
+    ? payload.response.trim()
+    : null;
+
+  // Prisma column is likely `String?` → string | null, so normalize to null
+  const model =
+    isNonEmptyString(payload.model) ? payload.model.trim() : null;
+
+  const metadata = normalizeMetadata(payload.metadata); // JsonValue | undefined
+
+  if (!prompt || !responseText) {
+    return res.status(400).json({
+      error: "`prompt` and `response` fields are required strings.",
+    });
+  }
+
+  if (payload.metadata !== undefined && metadata === undefined) {
+    return res.status(400).json({
+      error: "`metadata` must be JSON-serializable (object, array, or primitive).",
+    });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found in mock bank" });
+    }
+
+    const created = await prisma.aiResponse.create({
+      data: {
+        userId,
+        prompt,
+        response: responseText,
+        model: model ?? null,
+        ...(metadata === undefined
+          ? {}
+          : {
+              metadata:
+                metadata === null ? Prisma.JsonNull : metadata,
+            }),
+      },
+    });
+
+    res.status(201).json(created);
+  } catch (err) {
+    console.error("Error persisting AI response:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
