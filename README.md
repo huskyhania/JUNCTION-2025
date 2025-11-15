@@ -1,5 +1,15 @@
 # How to use
 
+Run this stuff
+
+docker run --name mockbank-postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=mockbank \
+  -p 5432:5432 \
+  -d postgres:16
+
+
 1. Backend:
 - add the .env in the backend folder and paste API KEY (it's on discord)
 - run commands:
