@@ -13,9 +13,9 @@ export default defineConfig({
   // Removed force: true to avoid re-optimizing on every start
   optimizeDeps: {
     // Three.js removed completely
+    exclude: ['@react-three/fiber', '@react-three/drei'],
   },
   server: {
-    // Exclude large 3D model files from being scanned
     fs: {
       strict: false,
     },
