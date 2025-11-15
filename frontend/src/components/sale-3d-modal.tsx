@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 // Preload the Porsche 911 model for better performance
-useGLTF.preload("/assets/porsche_911.glb")
+// useGLTF.preload("/assets/porsche_911.glb") // DISABLED FOR TESTING
 
 function LoadingSpinner() {
   return (
@@ -55,7 +55,7 @@ export function Sale3DModal({ isOpen, onClose }: Sale3DModalProps) {
             <Suspense fallback={<LoadingSpinner />}>
               <ambientLight intensity={0.5} />
               <directionalLight position={[10, 10, 5]} intensity={1} />
-              <PorscheModel />
+              {/* <PorscheModel /> DISABLED FOR TESTING */}
               <OrbitControls enableZoom={false} enablePan={true} enableRotate={true} minDistance={0.001} />
               <Environment preset="sunset" />
             </Suspense>
