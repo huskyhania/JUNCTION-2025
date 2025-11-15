@@ -1,5 +1,5 @@
 import MonthSummary from "./month_summary";
-// import Last30DaysChart from "./last30days";
+import Last30DaysChart from "./last30days";
 import { SavingsGoals } from "@/components/savings-goals";
 import { FinancialHealthScore } from "@/components/financial-health-score";
 import { QuickStats } from "@/components/quick-stats";
@@ -17,10 +17,10 @@ export default function Dashboard() {
           <QuickStats />
         </div>
         <div className="flex-1 w-full lg:w-auto">
-          {/* <Last30DaysChart /> */}
-          <div className="pt-4">
+          <Last30DaysChart />
+          {/* <div className="pt-4">
             <GoalBar current={3200} goal={5000} />
-          </div>
+          </div> */}
         </div>
       </div>
       
