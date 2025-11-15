@@ -72,12 +72,6 @@ const sidebarSections = [
     icon: List,
     href: "/transactions",
   },
-  {
-    name: "Financial Quiz",
-    description: "Test Your Knowledge",
-    icon: GraduationCap,
-    href: "/quiz",
-  },
 ]
 
 const insightOfTheDay = {

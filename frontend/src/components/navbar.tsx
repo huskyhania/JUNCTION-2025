@@ -101,7 +101,7 @@ export function Navbar() {
   const location = useLocation()
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-transparent">
+      <header className="sticky top-0 z-40 w-full backdrop-blur-md border-b border-white/20 shadow-sm">
       <div className="container flex h-16 items-center justify-between px-10">
         <div className="flex items-center gap-6">
           <Sheet open={open} onOpenChange={setOpen}>

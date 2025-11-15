@@ -93,12 +93,12 @@ export default function MoneyStory() {
 
       {/* Timeline */}
       <div className="relative">
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200"></div>
         <div className="space-y-6">
           {storyEvents.map((event, index) => (
             <div key={event.id} className="relative flex items-start gap-4">
               {/* Timeline Dot */}
-              <div className={`relative z-10 flex items-center justify-center w-16 h-16 rounded-full border-4 bg-white dark:bg-gray-800 ${
+              <div className={`relative z-10 flex items-center justify-center w-16 h-16 rounded-full border-4 bg-white ${
                 event.type === "income" ? "border-green-500" : event.type === "expense" ? "border-red-500" : "border-blue-500"
               }`}>
                 {getEventIcon(event.type)}
@@ -111,7 +111,7 @@ export default function MoneyStory() {
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-foreground">{event.title}</h3>
                       {event.category && (
-                        <span className="px-2 py-0.5 bg-white dark:bg-gray-800 text-xs rounded">
+                        <span className="px-2 py-0.5 bg-gray-100 text-xs rounded">
                           {event.category}
                         </span>
                       )}
