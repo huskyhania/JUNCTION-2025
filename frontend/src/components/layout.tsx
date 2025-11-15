@@ -4,7 +4,7 @@ import { Navbar } from "./navbar"
 
 export function Layout() {
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-slate-200/60">
       {/* Sidebar - Primary element */}
       <aside className="hidden lg:block">
         <Sidebar />
@@ -13,7 +13,7 @@ export function Layout() {
       {/* Main content area with navbar */}
       <div className="flex flex-1 flex-col min-w-0">
         <Navbar />
-        <main className="flex-1 overflow-y-auto bg-gray-100">
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </div>

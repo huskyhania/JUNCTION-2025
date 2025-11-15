@@ -40,7 +40,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="rounded-xl border">
+    <div className="rounded-xl">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -31,7 +31,7 @@ const sidebarSections = [
     name: "Month Summary",
     description: "Income, Spending",
     icon: DollarSign,
-    href: "/month-summary",
+    href: "/home",
   },
   {
     name: "Spending Categories",
@@ -90,7 +90,7 @@ export function Sidebar() {
   }
 
   return (
-    <div className="flex h-screen w-72 flex-col bg-background shrink-0">
+    <div className="flex h-screen w-72 flex-col bg-white shrink-0">
       {/* App Name */}
       <div className="p-4">
         <Link to="/home" className="flex items-center">
@@ -152,8 +152,8 @@ export function Sidebar() {
                   className={cn(
                     "flex flex-col gap-1 rounded-lg px-3 py-2 text-sm transition-colors",
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                      ? "border border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-semibold "
+                      : "text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-200 hover:text-foreground"
                   )}
                 >
                   <div className="flex items-center gap-2">
@@ -163,7 +163,7 @@ export function Sidebar() {
                   {item.description && (
                     <span className={cn(
                       "text-xs pl-6",
-                      isActive ? "text-primary-foreground/80" : "text-muted-foreground"
+                      isActive ? "text-blue-600 dark:text-blue-300" : "text-muted-foreground"
                     )}>
                       {item.description}
                     </span>
