@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Button } from "@/components/ui/button"
 
 export default function App() {
   return (
@@ -11,46 +12,14 @@ export default function App() {
         Learn financial skills, for real.
       </p>
 
-      <Link
-        to="/home"
-        className="
-          w-full 
-          max-w-xs
-          bg-blue-600 
-          hover:bg-blue-700 
-          text-white 
-          font-semibold 
-          py-3 
-          rounded-xl 
-          shadow-sm 
-          transition 
-          active:scale-95 
-          text-center 
-          block
-        "
-      >
-        Start Learning
-      </Link>
-        <Link
-        to="/chat"
-        className="
-          w-full 
-          max-w-xs
-          bg-blue-600 
-          hover:bg-blue-700 
-          text-white 
-          font-semibold 
-          py-3 
-          rounded-xl 
-          shadow-sm 
-          transition 
-          active:scale-95 
-          text-center 
-          block
-        "
-      >
-        Chat bot
-      </Link>
+      <div className="w-full max-w-xs space-y-3">
+        <Button asChild className="w-full" variant="outline">
+          <Link to="/home">Start Learning</Link>
+        </Button>
+        <Button asChild className="w-full" variant="outline">
+          <Link to="/chat">Chat bot</Link>
+        </Button>
+      </div>
     </div>
   );
 }

@@ -11,14 +11,17 @@ import {
 import App from './App.tsx'
 import Home from './pages/Home.tsx'
 import Chat from './pages/Chat.tsx'
+import { Layout } from './components/layout'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/chat" element={<Chat />} /> 
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/chat" element={<Chat />} /> 
+        </Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
