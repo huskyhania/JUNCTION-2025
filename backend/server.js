@@ -4,8 +4,6 @@ const fastify = require('fastify')();
 const OpenAI = require("openai");
 require("dotenv").config();
 
-console.log('wtf: ', process.env.API_KEY);
-
 fastify.register(require('@fastify/websocket'));
 
 // CORS configuration
