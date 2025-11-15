@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BudgetProgress } from "@/components/budget-progress";
-import { SpendingBubbleChart } from "@/components/spending-bubble-chart";
+import { SpendingDonutChart } from "@/components/spending-pie-chart";
 import { Button } from "@/components/ui/button";
 
 export default function SpendingCategories() {
@@ -13,7 +13,7 @@ export default function SpendingCategories() {
         <p className="text-muted-foreground">Track your budget progress across different categories</p>
       </div>
 
-      <SpendingBubbleChart />
+      <SpendingDonutChart />
       
       <BudgetProgress />
       
