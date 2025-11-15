@@ -39,7 +39,7 @@ Frontend is displaying:
 
 It uses hardcoded values, should be replaced by the ones from database.
 
-Python script for starting backend and frontend all at once (should also work for mockback if docker is up):
+Python script for starting backend and frontend all at once (should also work for mockbank if docker is up):
 bash
 ```
 python3 start.py
@@ -51,3 +51,19 @@ curl http://localhost:3001/users
 
 e.g.
 curl http://localhost:3001/users/demo1/transactions
+
+AI response log (powered by new Prisma model)  
+```
+curl http://localhost:3001/users/demo1/ai-responses
+curl -X POST http://localhost:3001/users/demo1/ai-responses ^
+  -H "Content-Type: application/json" ^
+  -d "{\"prompt\":\"What should I do about groceries?\",\"response\":\"Cut impulse snacks by 20%.\",\"model\":\"meta-llama\",\"metadata\":{\"tags\":[\"groceries\"]}}"
+```
+
+After pulling changes run in `mockbank/`:
+```
+npm install
+npx prisma migrate dev
+npm run seed
+```
+to apply the new `AiResponse` table and sample insights.
