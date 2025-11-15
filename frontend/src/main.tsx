@@ -20,6 +20,7 @@ import BNPL from './pages/bnpl.tsx'
 import MoneyStory from './pages/money-story.tsx'
 import Transactions from './pages/transactions.tsx'
 import Insight from './pages/insight.tsx'
+import Quiz from './pages/quiz.tsx'
 import { Layout } from './components/layout'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -39,6 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/money-story" element={<MoneyStory />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/insight" element={<Insight />} />
+          <Route path="/quiz" element={<Quiz />} />
         </Route>
       </Routes>
     </BrowserRouter>

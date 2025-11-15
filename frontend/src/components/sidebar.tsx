@@ -12,6 +12,7 @@ import {
   ChevronDown,
   Settings,
   LogOut,
+  GraduationCap,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -70,6 +71,12 @@ const sidebarSections = [
     name: "Transactions Feed",
     icon: List,
     href: "/transactions",
+  },
+  {
+    name: "Financial Quiz",
+    description: "Test Your Knowledge",
+    icon: GraduationCap,
+    href: "/quiz",
   },
 ]
 

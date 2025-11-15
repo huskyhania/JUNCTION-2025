@@ -35,6 +35,11 @@ const navigation = [
     href: "/chat",
     icon: MessageSquare,
   },
+  {
+    name: "Quiz",
+    href: "/quiz",
+    icon: BookOpen,
+  }
 ]
 
 const sidebarSections = [
