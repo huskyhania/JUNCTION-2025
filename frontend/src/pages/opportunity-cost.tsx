@@ -16,7 +16,7 @@ const opportunities: Opportunity[] = [
     amount: 150,
     couldHaveBought: "Emergency Fund Contribution",
     icon: Coffee,
-    color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+    color: "bg-amber-100 text-amber-700",
   },
   {
     id: "2",
@@ -24,7 +24,7 @@ const opportunities: Opportunity[] = [
     amount: 320,
     couldHaveBought: "Weekend Getaway",
     icon: Plane,
-    color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+    color: "bg-blue-100 text-blue-700",
   },
   {
     id: "3",
@@ -32,7 +32,7 @@ const opportunities: Opportunity[] = [
     amount: 85,
     couldHaveBought: "Savings Goal Progress",
     icon: PiggyBank,
-    color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+    color: "bg-green-100 text-green-700",
   },
   {
     id: "4",
@@ -40,7 +40,7 @@ const opportunities: Opportunity[] = [
     amount: 200,
     couldHaveBought: "Investment Contribution",
     icon: TrendingUp,
-    color: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+    color: "bg-purple-100 text-purple-700",
   },
 ]
 
@@ -59,8 +59,8 @@ export default function OpportunityCost() {
       {/* Summary Card */}
       <div className="bg-white p-6 rounded-xl shadow-sm">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-            <Lightbulb className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          <div className="p-3 bg-blue-100 rounded-lg">
+            <Lightbulb className="h-6 w-6 text-blue-600" />
           </div>
           <div>
             <div className="text-sm text-muted-foreground">Total Opportunity Cost</div>
@@ -103,9 +103,9 @@ export default function OpportunityCost() {
       </div>
 
       {/* Insight Card */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl">
         <div className="flex items-start gap-3">
-          <Lightbulb className="h-6 w-6 text-blue-600 dark:text-blue-400 mt-0.5" />
+          <Lightbulb className="h-6 w-6 text-blue-600 mt-0.5" />
           <div>
             <h3 className="font-semibold text-foreground mb-2">Insight</h3>
             <p className="text-sm text-muted-foreground mb-3">

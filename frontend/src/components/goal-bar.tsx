@@ -47,7 +47,7 @@ export function GoalBar({
       <div className="flex items-center gap-2">
         <div
           className={cn(
-            "flex-1 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700",
+            "flex-1 rounded-full overflow-hidden bg-gray-200",
             heightClasses[size]
           )}
         >
@@ -68,13 +68,13 @@ export function GoalBar({
             {goal.toLocaleString()}
           </span>
           {!isComplete && (
-            <span className="text-blue-600 dark:text-blue-400 font-medium">
+            <span className="text-blue-600 font-medium">
               {unit}
               {remaining.toLocaleString()} to go
             </span>
           )}
           {isComplete && (
-            <span className="text-green-600 dark:text-green-400 font-medium">
+            <span className="text-green-600 font-medium">
               Goal reached! 🎉
             </span>
           )}

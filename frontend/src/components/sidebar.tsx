@@ -105,11 +105,11 @@ export function Sidebar() {
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>JD</AvatarFallback>
+              <AvatarFallback>AL</AvatarFallback>
             </Avatar>
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-sm font-semibold truncate">John Doe</span>
-              <span className="text-xs text-muted-foreground truncate">john@example.com</span>
+              <span className="text-sm font-semibold truncate">Alex</span>
+              <span className="text-xs text-muted-foreground truncate">user@beesaver.com</span>
             </div>
           </div>
           <DropdownMenu>
@@ -129,7 +129,7 @@ export function Sidebar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem 
                 onClick={handleLogout} 
-                className="text-destructive focus:text-destructive hover:bg-gray-100 hover:text-destructive dark:hover:bg-gray-200"
+                className="text-destructive focus:text-destructive hover:bg-gray-100 hover:text-destructive"
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Logout</span>
@@ -153,8 +153,8 @@ export function Sidebar() {
                   className={cn(
                     "flex flex-col gap-1 rounded-lg px-3 py-2 text-sm transition-colors min-h-[3.5rem] justify-center",
                     isActive
-                      ? "border border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-semibold "
-                      : "text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-200 hover:text-foreground"
+                      ? "border border-blue-500 text-blue-700 font-semibold "
+                      : "text-muted-foreground hover:bg-gray-200 hover:text-foreground"
                   )}
                 >
                   <div className="flex items-center gap-2">
@@ -164,7 +164,7 @@ export function Sidebar() {
                   {item.description && (
                     <span className={cn(
                       "text-xs pl-6",
-                      isActive ? "text-blue-600 dark:text-blue-300" : "text-muted-foreground"
+                      isActive ? "text-blue-600" : "text-muted-foreground"
                     )}>
                       {item.description}
                     </span>
@@ -185,7 +185,7 @@ export function Sidebar() {
               )}
             >
               <div className="flex items-center gap-2">
-                <insightOfTheDay.icon className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+                <insightOfTheDay.icon className="h-4 w-4 text-yellow-600" />
                 <span className="font-semibold text-foreground">{insightOfTheDay.name}</span>
               </div>
               {insightOfTheDay.description && (

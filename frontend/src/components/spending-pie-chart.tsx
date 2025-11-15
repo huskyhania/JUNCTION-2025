@@ -32,7 +32,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload
     return (
-      <div className="bg-white dark:bg-gray-200 p-3 rounded-lg shadow-lg border">
+      <div className="bg-white p-3 rounded-lg shadow-lg border">
         <p className="font-semibold text-foreground">{data.category}</p>
         <p className="text-sm text-muted-foreground">
           Total: <span className="font-medium text-foreground">€{data.totalAmount.toFixed(2)}</span>

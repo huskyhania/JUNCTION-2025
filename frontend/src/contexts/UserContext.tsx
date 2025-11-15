@@ -10,6 +10,8 @@ interface UserContextType {
   setCurrentBadge: (badge: string | null) => void
   addCoins: (amount: number) => void
   updatePlan: (plan: Plan | null) => void
+  currentWallpaper: string | null
+  setCurrentWallpaper: (wallpaper: string | null) => void
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -17,16 +19,19 @@ const UserContext = createContext<UserContextType | undefined>(undefined)
 // Default mock user data
 const defaultUser: User = {
   id: "1",
-  email: "john@example.com",
-  name: "John Doe",
+  email: "user@beesaver.com",
+  name: "Alex",
   currentBadge: null,
   badges: [],
-  coin: 0,
+  coin: 250,
   plan: null,
 }
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(defaultUser)
+  const [currentWallpaper, setCurrentWallpaper] = useState<string | null>(
+    localStorage.getItem("currentWallpaper") || null
+  )
 
   const updateUser = (updates: Partial<User>) => {
     if (user) {
@@ -70,6 +75,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const handleSetWallpaper = (wallpaper: string | null) => {
+    setCurrentWallpaper(wallpaper)
+    if (wallpaper) {
+      localStorage.setItem("currentWallpaper", wallpaper)
+    } else {
+      localStorage.removeItem("currentWallpaper")
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -80,6 +94,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         setCurrentBadge,
         addCoins,
         updatePlan,
+        currentWallpaper,
+        setCurrentWallpaper: handleSetWallpaper,
       }}
     >
       {children}

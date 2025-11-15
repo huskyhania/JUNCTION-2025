@@ -44,7 +44,7 @@ export function QuickStats() {
             </div>
             <div className="text-2xl font-bold text-foreground">{stat.value}</div>
             {stat.change && (
-              <div className={`text-xs ${stat.changeType === "negative" ? "text-red-600 dark:text-red-400" : "text-muted-foreground"}`}>
+              <div className={`text-xs ${stat.changeType === "negative" ? "text-red-600" : "text-muted-foreground"}`}>
                 {stat.change}
               </div>
             )}

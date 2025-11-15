@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import { Loader2 } from "lucide-react"
 
 // Preload the Porsche 911 model for better performance
-useGLTF.preload("/assets/porsche_911.glb")
+// useGLTF.preload("/assets/porsche_911.glb") // DISABLED FOR TESTING
 
 function LoadingSpinner() {
   return (

@@ -201,9 +201,9 @@ export default function BNPL() {
       </div>
 
       {/* Warning */}
-      <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-xl">
+      <div className="bg-orange-50 p-4 rounded-xl">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5" />
+          <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5" />
           <div>
             <h3 className="font-semibold text-foreground mb-1">Payment Reminder</h3>
             <p className="text-sm text-muted-foreground">

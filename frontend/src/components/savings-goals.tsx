@@ -10,14 +10,14 @@ interface Goal {
 const goals: Goal[] = [
   { name: "Emergency Fund", target: 5000, current: 3200, deadline: "2025-12-31" },
   { name: "Vacation", target: 2000, current: 850, deadline: "2026-06-30" },
-  { name: "Porsche 911", target: 1500, current: 1200, deadline: "2026-03-31" },
+  // { name: "Porsche 911", target: 1500, current: 1200, deadline: "2026-03-31" }, // DISABLED FOR TESTING
 ]
 
 export function SavingsGoals() {
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm h-full flex flex-col">
       <div className="flex items-center gap-2 mb-4">
-        <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <Target className="h-5 w-5 text-blue-600" />
         <h2 className="text-lg font-semibold text-foreground">Savings Goals</h2>
       </div>
       <div className="space-y-4">
@@ -45,7 +45,7 @@ export function SavingsGoals() {
               <div className="flex justify-between items-center text-xs">
                 <span className="text-muted-foreground">€{goal.current.toLocaleString()}</span>
                 <span className="text-muted-foreground">€{goal.target.toLocaleString()}</span>
-                <span className="text-blue-600 dark:text-blue-400 font-medium">€{remaining.toLocaleString()} to go</span>
+                <span className="text-blue-600 font-medium">€{remaining.toLocaleString()} to go</span>
               </div>
             </div>
           )

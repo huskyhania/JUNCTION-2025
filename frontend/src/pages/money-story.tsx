@@ -76,11 +76,11 @@ export default function MoneyStory() {
   const getEventColor = (type: string) => {
     switch (type) {
       case "income":
-        return "border-green-500 bg-green-50 dark:bg-green-900/20"
+        return "border-green-500 bg-green-50"
       case "expense":
-        return "border-red-500 bg-red-50 dark:bg-red-900/20"
+        return "border-red-500 bg-red-50"
       default:
-        return "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+        return "border-blue-500 bg-blue-50"
     }
   }
 
@@ -125,7 +125,7 @@ export default function MoneyStory() {
                 </div>
                 {event.amount && (
                   <div className={`text-lg font-bold ${
-                    event.type === "income" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                    event.type === "income" ? "text-green-600" : "text-red-600"
                   }`}>
                     {event.type === "income" ? "+" : "-"}€{event.amount.toLocaleString()}
                   </div>
@@ -142,19 +142,19 @@ export default function MoneyStory() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <div className="text-sm text-muted-foreground mb-1">Total Income</div>
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+            <div className="text-2xl font-bold text-green-600">
               €{storyEvents.filter((e) => e.type === "income").reduce((sum, e) => sum + (e.amount || 0), 0).toLocaleString()}
             </div>
           </div>
           <div>
             <div className="text-sm text-muted-foreground mb-1">Total Expenses</div>
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+            <div className="text-2xl font-bold text-red-600">
               €{storyEvents.filter((e) => e.type === "expense").reduce((sum, e) => sum + (e.amount || 0), 0).toLocaleString()}
             </div>
           </div>
           <div>
             <div className="text-sm text-muted-foreground mb-1">Milestones</div>
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-2xl font-bold text-blue-600">
               {storyEvents.filter((e) => e.type === "milestone").length}
             </div>
           </div>

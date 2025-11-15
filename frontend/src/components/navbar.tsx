@@ -13,6 +13,8 @@ import {
   Lightbulb,
   List,
   DollarSign,
+  Coins,
+  ShoppingBag,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,6 +25,7 @@ import {
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { useUser } from "@/contexts/UserContext"
 
 const navigation = [
   {
@@ -39,7 +42,12 @@ const navigation = [
     name: "Game",
     href: "/game",
     icon: BookOpen,
-  }
+  },
+  {
+    name: "Store",
+    href: "/store",
+    icon: ShoppingBag,
+  },
 ]
 
 const sidebarSections = [
@@ -99,6 +107,7 @@ const insightOfTheDay = {
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
+  const { user } = useUser()
 
   return (
       <header className="sticky top-0 z-40 w-full backdrop-blur-md border-b border-white/20 shadow-sm">
@@ -123,8 +132,8 @@ export function Navbar() {
                       <AvatarFallback>JD</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="text-sm font-semibold">John Doe</span>
-                      <span className="text-xs text-muted-foreground">john@example.com</span>
+                      <span className="text-sm font-semibold">Alex</span>
+                      <span className="text-xs text-muted-foreground">user@beesaver.com</span>
                     </div>
                   </div>
                 </div>
@@ -194,7 +203,7 @@ export function Navbar() {
                       )}
                     >
                       <div className="flex items-center gap-2">
-                        <insightOfTheDay.icon className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+                        <insightOfTheDay.icon className="h-4 w-4 text-yellow-600" />
                         <span className="font-semibold text-foreground">{insightOfTheDay.name}</span>
                       </div>
                       {insightOfTheDay.description && (
@@ -228,6 +237,12 @@ export function Navbar() {
               </Link>
             )
           })}
+          <div className="flex items-center gap-2">
+            <Coins className="h-4 w-4 text-yellow-600" />
+            <span className="text-sm font-semibold text-foreground">
+              {user?.coin?.toLocaleString() || 0}
+            </span>
+          </div>
         </nav>
       </div>
     </header>

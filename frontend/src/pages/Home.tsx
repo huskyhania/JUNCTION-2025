@@ -1,6 +1,6 @@
 import Dashboard from "./dashboard";
 import { useUser } from "@/contexts/UserContext";
-import { Coins, Award } from "lucide-react";
+import { Coins, Award, Target } from "lucide-react";
 
 export default function Home() {
   const { user } = useUser();
@@ -13,18 +13,22 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-bold">Yo 🤟🏻 {user?.name || "User"}, welcome!</h1>
             {user?.currentBadge && (
-              <div className="flex items-center gap-1 px-2 py-1 bg-yellow-100 dark:bg-yellow-900/20 rounded-full">
-                <Award className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                <span className="text-xs font-semibold text-yellow-700 dark:text-yellow-300">
+              <div className="flex items-center gap-1 px-2 py-1 bg-yellow-100 rounded-full">
+                <Award className="h-4 w-4 text-yellow-600" />
+                <span className="text-xs font-semibold text-yellow-700">
                   {user.currentBadge}
                 </span>
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2 mt-1">
-            <Coins className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-            <span className="text-lg font-semibold text-foreground">
-              {user?.coin?.toLocaleString() || 0} coins
+          <div className="flex items-center gap-2 mt-3 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <Target className="h-4 w-4 shrink-0 text-blue-600" />
+            <span className="text-sm font-medium text-foreground">
+              Save <span className="font-semibold text-blue-600">€70</span> this week to get{" "}
+              <span className="inline-flex items-center gap-1">
+                <Coins className="h-2.5 w-2.5 text-yellow-600" />
+                <span className="font-semibold">10 coins</span>
+              </span>
             </span>
           </div>
         </div>

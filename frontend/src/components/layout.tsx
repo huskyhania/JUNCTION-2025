@@ -1,10 +1,21 @@
 import { Outlet } from "react-router-dom"
 import { Sidebar } from "./sidebar"
 import { Navbar } from "./navbar"
+import { useUser } from "@/contexts/UserContext"
+import { cn } from "@/lib/utils"
 
 export function Layout() {
+  const { currentWallpaper } = useUser()
+  
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-200/60">
+    <div className="flex h-screen overflow-hidden relative">
+      {/* Apply wallpaper gradient if set */}
+      {currentWallpaper ? (
+        <div className={cn("fixed inset-0 -z-10", currentWallpaper)} />
+      ) : (
+        <div className="fixed inset-0 -z-10 bg-slate-200/60" />
+      )}
+      
       {/* Sidebar - Primary element */}
       <aside className="hidden lg:block">
         <Sidebar />
