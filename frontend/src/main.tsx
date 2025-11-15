@@ -22,27 +22,30 @@ import Transactions from './pages/transactions.tsx'
 import Insight from './pages/insight.tsx'
 import Game from './pages/game.tsx'
 import { Layout } from './components/layout'
+import { UserProvider } from './contexts/UserContext'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route element={<Layout />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/month-summary" element={<MonthSummary />} />
-          <Route path="/spending-categories" element={<SpendingCategories />} />
-          <Route path="/opportunity-cost" element={<OpportunityCost />} />
-          <Route path="/upcoming-payments" element={<UpcomingPayments />} />
-          <Route path="/subscriptions" element={<Subscriptions />} />
-          <Route path="/bnpl" element={<BNPL />} />
-          <Route path="/money-story" element={<MoneyStory />} />
-          <Route path="/transactions" element={<Transactions />} />
-          <Route path="/insight" element={<Insight />} />
-          <Route path="/game" element={<Game />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/month-summary" element={<MonthSummary />} />
+            <Route path="/spending-categories" element={<SpendingCategories />} />
+            <Route path="/opportunity-cost" element={<OpportunityCost />} />
+            <Route path="/upcoming-payments" element={<UpcomingPayments />} />
+            <Route path="/subscriptions" element={<Subscriptions />} />
+            <Route path="/bnpl" element={<BNPL />} />
+            <Route path="/money-story" element={<MoneyStory />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/insight" element={<Insight />} />
+            <Route path="/game" element={<Game />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   </React.StrictMode>,
 )

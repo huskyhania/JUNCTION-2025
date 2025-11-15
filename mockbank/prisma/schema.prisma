@@ -13,7 +13,12 @@ model User {
   id           String         @id
   email        String         @unique
   name         String
+  currentBadge String?        // Current active badge
+  badges       String[]       @default([]) // Array of badge IDs/names
+  coin         Int            @default(0) // User's coin balance
+  plan         Json?          // Plan object with goal value and optional item
   createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now()) @updatedAt
   transactions Transaction[]
   aiResponses  AiResponse[]
 }
