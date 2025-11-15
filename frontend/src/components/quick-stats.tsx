@@ -33,7 +33,7 @@ const stats = [
 
 export function QuickStats() {
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm">
+    <div className="bg-white p-4 rounded-xl shadow-sm h-full">
       <h2 className="text-lg font-semibold mb-4 text-foreground">Quick Stats</h2>
       <div className="grid grid-cols-2 gap-4">
         {stats.map((stat) => (

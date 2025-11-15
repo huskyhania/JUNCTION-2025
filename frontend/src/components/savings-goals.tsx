@@ -10,7 +10,7 @@ interface Goal {
 const goals: Goal[] = [
   { name: "Emergency Fund", target: 5000, current: 3200, deadline: "2024-12-31" },
   { name: "Vacation", target: 2000, current: 850, deadline: "2024-06-30" },
-  { name: "New Laptop", target: 1500, current: 1200, deadline: "2024-03-31" },
+  { name: "Porsche 911", target: 1500, current: 1200, deadline: "2024-03-31" },
 ]
 
 export function SavingsGoals() {
@@ -42,8 +42,9 @@ export function SavingsGoals() {
                   {percentage.toFixed(0)}%
                 </span>
               </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">€{goal.current.toLocaleString()} / €{goal.target.toLocaleString()}</span>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-muted-foreground">€{goal.current.toLocaleString()}</span>
+                <span className="text-muted-foreground">€{goal.target.toLocaleString()}</span>
                 <span className="text-blue-600 dark:text-blue-400 font-medium">€{remaining.toLocaleString()} to go</span>
               </div>
             </div>

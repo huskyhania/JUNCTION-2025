@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Send, Bot, User, AlertCircle } from "lucide-react"
-
 import { Textarea } from "@/components/ui/textarea"
-
-// WebSocket URL - can be configured via environment variable
-const WS_URL = import.meta.env.VITE_WS_URL || "ws://localhost:3000/"
+import { Send, Bot, User } from "lucide-react"
 
 export default function Chat() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([])
@@ -212,10 +208,10 @@ export default function Chat() {
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t bg-white">
+        <div className="p-4 border-t">
           <div className="flex gap-2 items-end">
             <Textarea
-              className="flex-1 resize-none min-h-[60px] max-h-[200px]"
+              className="flex-1 min-h-[60px] max-h-[120px] resize-none"
               value={input}
               placeholder="Type your message..."
               onChange={(e) => setInput(e.target.value)}
@@ -225,16 +221,15 @@ export default function Chat() {
                   sendMessage()
                 }
               }}
-              disabled={!isConnected || isConnecting}
+              disabled={!isConnected}
               rows={1}
             />
             <Button 
               onClick={sendMessage} 
-              disabled={!isConnected || !input.trim() || isConnecting} 
-              className="gap-2 h-[60px]"
+              disabled={!isConnected || !input.trim()} 
+              className="h-[60px] px-4"
             >
               <Send className="h-4 w-4" />
-              Send
             </Button>
           </div>
         </div>
