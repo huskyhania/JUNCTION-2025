@@ -10,7 +10,22 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Removed force: true to avoid re-optimizing on every start
   optimizeDeps: {
-    force: true,
+    // Three.js removed completely
+  },
+  server: {
+    // Exclude large 3D model files from being scanned
+    fs: {
+      strict: false,
+    },
+  },
+  build: {
+    // Exclude large assets from build if not needed
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
 })

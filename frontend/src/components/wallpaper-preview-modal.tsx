@@ -1,7 +1,6 @@
 import { X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Model3DPreview } from "./3d-model-preview"
 
 interface Wallpaper {
   id: string
@@ -51,7 +50,9 @@ export function WallpaperPreviewModal({
           wallpaper.type === "3d" ? "bg-transparent" : wallpaper.preview
         )}>
           {wallpaper.type === "3d" ? (
-            <Model3DPreview className="w-full h-full" />
+            <div className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+              <div className="text-white/50 text-sm">3D Preview Unavailable</div>
+            </div>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-xl">
