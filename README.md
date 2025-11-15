@@ -16,3 +16,8 @@ bash
 npm install
 npm run dev
 ``` 
+# Features
+
+Backend is making api calls to AI when it gets message from the front end.
+ - You can change the model from line 29.
+ - Currently the ai thinks its speaking to a child. You can change this from line 31.
