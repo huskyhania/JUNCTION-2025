@@ -15,6 +15,7 @@ model User {
   name         String
   createdAt    DateTime       @default(now())
   transactions Transaction[]
+  aiResponses  AiResponse[]
 }
 
 model Transaction {
@@ -30,4 +31,19 @@ model Transaction {
   category    String   // e.g. "bnpl", "groceries", "income"
 
   createdAt   DateTime @default(now())
+}
+
+model AiResponse {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  prompt    String
+  response  String
+  model     String?
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
 }
