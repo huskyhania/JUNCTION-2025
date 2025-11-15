@@ -1,17 +1,30 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from "recharts"
 import { paymentsData } from "@/pages/payments-data"
 
+// const categoryColors: Record<string, string> = {
+//   Food: "#22c55e",
+//   Utilities: "#eab308",
+//   Housing: "#3b82f6",
+//   Transportation: "#8b5cf6",
+//   Shopping: "#ec4899",
+//   Health: "#f59e0b",
+//   Entertainment: "#ef4444",
+//   Income: "#10b981",
+//   Education: "#06b6d4",
+//   Travel: "#f97316",
+// }
+
 const categoryColors: Record<string, string> = {
-  Food: "#22c55e",
-  Utilities: "#eab308",
-  Housing: "#3b82f6",
-  Transportation: "#8b5cf6",
-  Shopping: "#ec4899",
-  Health: "#f59e0b",
-  Entertainment: "#ef4444",
-  Income: "#10b981",
-  Education: "#06b6d4",
-  Travel: "#f97316",
+  Food: "#10b981", // Green
+  Utilities: "#eab308", // Yellow
+  Housing: "#3b82f6", // Blue
+  Transportation: "#8b5cf6", // Violet
+  Shopping: "#ff7f50", // Coral
+  Health: "#14b8a6", // Teal (Blue-Green)
+  Entertainment: "#6366f1", // Indigo (Blue-Violet)
+  Education: "#06b6d4", // Cyan
+  Travel: "#f97316", // Orange (Was light purple)
+  // Income: "#10b981", // (Filtered out, but here for completeness) <-- Removed this line
 }
 
 // Custom Tooltip (same as before, still good!)
@@ -106,18 +119,10 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, fill, percent, n
 // Custom Shape for the "3D" effect
 const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+  // const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill} = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
-
-  // Slightly displace the active slice to give a "popping out" effect
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? 'start' : 'end';
 
   // Apply a shadow/depth effect by drawing a slightly offset darker slice
   const shadowOffset = 5; // How much the shadow is offset
@@ -188,9 +193,9 @@ export function SpendingDonutChart() {
     .sort((a, b) => b.totalAmount - a.totalAmount);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm">
-      <h2 className="text-lg font-semibold mb-4 text-foreground">Spending by Category</h2>
-      <div className="w-full h-[350px] sm:h-[600px] md:h-[650px] lg:h-[700px]"> {/* Increased height for labels */}
+    <div className="bg-white p-1 rounded-xl shadow-sm">
+      <h2 className="text-lg font-semibold mb-1 text-foreground">Spending by Category</h2>
+      <div className="w-full h-[280px] sm:h-[600px] md:h-[650px] lg:h-[700px]"> {/* Increased height for labels */}
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Tooltip content={<CustomTooltip />} />
@@ -201,8 +206,8 @@ export function SpendingDonutChart() {
               nameKey="category"
               cx="50%"
               cy="50%"
-              innerRadius="40%"
-              outerRadius="70%" // Slightly smaller outer radius to make space for labels
+              innerRadius="25%"
+              outerRadius="50%" // Slightly smaller outer radius to make space for labels
               paddingAngle={0}
               fill="#8884d8"
               label={renderCustomizedLabel} // Use custom label component

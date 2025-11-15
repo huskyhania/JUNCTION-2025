@@ -51,7 +51,7 @@ const sidebarSections = [
   },
   {
     name: "Spending Categories",
-    description: "Bars/Bubbles",
+    description: "charts",
     icon: PieChart,
     href: "/spending-categories",
   },
