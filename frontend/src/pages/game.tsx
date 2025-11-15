@@ -19,12 +19,10 @@ export default function Game() {
   const [achievements, setAchievements] = useState<string[]>([])
   const [loadingChoice, setLoadingChoice] = useState(false)
 
-  // 🔥 Load a new scenario on mount
   const loadScenario = async () => {
     setLoading(true)
     setSelectedChoice(null)
     setResult(null)
-    setAchievements([])
 
     try {
       const res = await fetch("http://localhost:3000/api/game/new", {
@@ -87,7 +85,7 @@ export default function Game() {
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-bold flex items-center gap-2">
-            <Sparkles className="text-yellow-500" /> Financial Scenario
+            <Sparkles className="text-yellow-500" />{scenario.title}
           </CardTitle>
         </CardHeader>
 

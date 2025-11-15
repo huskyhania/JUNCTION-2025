@@ -9,6 +9,58 @@ require("dotenv").config();
 
 let GoogleGenerativeAI;
 
+let achievementProgress = {
+  smartChoices: 0,
+  riskyChoices: 0,
+  ethicalChoices: 0,
+  savingsImprovementChoices: 0,
+  negotiationChoices: 0,
+};
+
+const ACHIEVEMENTS = {
+  smartChoices: [
+    { threshold: 1, name: "THOUGHTFUL DECISION MAKER" },
+    { threshold: 3, name: "FINANCIAL STRATEGIST" }
+  ],
+  riskyChoices: [
+    { threshold: 1, name: "RISK TAKER" },
+    { threshold: 3, name: "HIGH ROLLER" }
+  ],
+  ethicalChoices: [
+    { threshold: 1, name: "ETHICAL DECIDER" },
+    { threshold: 3, name: "COMMUNITY CHAMPION" }
+  ],
+  negotiationChoices: [
+    { threshold: 1, name: "CLEVER NEGOTIATOR" },
+    { threshold: 3, name: "MASTER DEALMAKER" }
+  ],
+  savingsImprovementChoices: [
+    { threshold: 1, name: "BUDGET APPRENTICE" },
+    { threshold: 7, name: "SAVINGS MASTER" }
+  ]
+};
+
+function classifyChoice(optionText, consequenceText) {
+  const text = (optionText + " " + consequenceText).toLowerCase();
+
+  if (text.includes("negotiate") || text.includes("deal"))
+    return "negotiationChoices";
+
+  if (text.includes("save") || text.includes("conservative") || text.includes("careful"))
+    return "smartChoices";
+
+  if (text.includes("risk") || text.includes("gamble") || text.includes("invest"))
+    return "riskyChoices";
+
+  if (text.includes("ethical") || text.includes("responsible") || text.includes("donate"))
+    return "ethicalChoices";
+
+  if (text.includes("budget") || text.includes("reduce") || text.includes("cut"))
+    return "savingsImprovementChoices";
+
+  return null; // fallback
+}
+
 try {
   const pkg = require("@google/generative-ai");
   GoogleGenerativeAI = pkg.GoogleGenerativeAI || pkg.default;
@@ -153,19 +205,78 @@ Return ONLY a valid JSON array of insights, no other text. Example format:
         return reply.status(400).send({ error: "scenario + choiceIndex required" });
       }
   
-      const consequences = scenario.consequences[String(choiceIndex)];
+      // Extract option selected
+      const optionText = scenario.options?.[choiceIndex] || "";
   
-      const unlocked = [];
+      // Extract consequence
+      const rawConsequence = scenario.consequences?.[String(choiceIndex)];
   
-      // Example: Unlock achievements
-      if (choiceIndex === 0) unlocked.push("SMART_SAVER");
-      if (choiceIndex === 1) unlocked.push("DEBT_RISK_TAKER");
+      // Normalize consequences into a usable string
+      let consequenceText = "";
+  
+      if (typeof rawConsequence === "string") {
+        consequenceText = rawConsequence;
+      } else if (typeof rawConsequence === "object") {
+        consequenceText = rawConsequence.shortTerm ||
+                          rawConsequence.longTerm ||
+                          JSON.stringify(rawConsequence);
+      } else {
+        consequenceText = "";
+      }
+  
+      // CLASSIFICATION LOGIC
+      function classifyChoice(optionText, consequenceText = "") {
+        const text = (optionText + " " + consequenceText).toLowerCase();
+  
+        const categories = {
+          negotiationChoices: ["negotiate", "deal", "bargain", "arrange", "discussion"],
+          smartChoices: ["save", "careful", "conservative", "low risk", "frugal", "cautious"],
+          riskyChoices: ["risk", "invest", "gamble", "speculate", "high-risk"],
+          ethicalChoices: ["ethical", "responsible", "donate", "charity", "community"],
+          savingsImprovementChoices: ["budget", "cut", "reduce", "lower spending", "tighten"]
+        };
+  
+        for (const category in categories) {
+          if (categories[category].some(k => text.includes(k))) {
+            return category;
+          }
+        }
+  
+        return "smartChoices"; // Fallback so achievements always progress
+      }
+  
+      const category = classifyChoice(optionText, consequenceText);
+  
+      const newlyUnlocked = [];
+  
+      // Increase achievement progress
+      if (category) {
+        achievementProgress[category]++;
+  
+        // Check thresholds
+        for (const tier of ACHIEVEMENTS[category] || []) {
+          if (achievementProgress[category] === tier.threshold) {
+            newlyUnlocked.push(tier.name);
+          }
+        }
+      }
+  
+      // LOGGING
+      console.log("========== CHOICE DEBUG ==========");
+      console.log("Option:", optionText);
+      console.log("Consequence:", consequenceText);
+      console.log("Category:", category);
+      console.log("Achievement progress:", achievementProgress);
+      console.log("New unlocks:", newlyUnlocked);
+      console.log("==================================");
   
       return {
-        consequences,
+        consequences: scenario.consequences[String(choiceIndex)],
         learningTip: scenario.learningTip,
-        unlocked,
+        unlocked: newlyUnlocked,
+        progress: achievementProgress
       };
+  
     } catch (err) {
       console.error("Error choosing:", err);
       reply.status(500).send({ error: err.message });
@@ -183,7 +294,6 @@ Return ONLY a valid JSON array of insights, no other text. Example format:
       try {
         const message = rawMsg.toString();
     
-        // SPECIAL TRIGGER: If message starts with "gemini:"
         if (message.startsWith("gemini:")) {
           const geminiPrompt = message.replace("gemini:", "").trim();
     
@@ -204,7 +314,6 @@ Return ONLY a valid JSON array of insights, no other text. Example format:
           return;
         }
     
-        // Otherwise: use your *existing* Featherless/OpenAI model
         const client = new OpenAI({
           apiKey: process.env.API_KEY,
           baseURL: "https://api.featherless.ai/v1"
