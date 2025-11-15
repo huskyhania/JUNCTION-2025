@@ -10,6 +10,7 @@ import {
 
 import App from './App.tsx'
 import Home from './pages/Home.tsx'
+import Chat from './pages/Chat.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/chat" element={<Chat />} /> 
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
