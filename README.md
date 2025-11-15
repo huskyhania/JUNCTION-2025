@@ -20,6 +20,7 @@ npm run dev
 
 Backend is making api calls to AI when it gets message from the front end.
  - You can change the model from line 29.
+ - list of models https://featherless.ai/models .One of them might be better chat bot.
  - Currently the ai thinks its speaking to a child. You can change this from line 31.
 
 Frontend is displaying:
