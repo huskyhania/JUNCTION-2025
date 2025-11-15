@@ -48,7 +48,7 @@ export default function Last30DaysChart() {
         <div className="bg-white p-4 rounded-xl shadow-sm">
           <h2 className="text-lg font-semibold mb-3">Last 30 Days Cashflow</h2>
     
-          <div className="h-72">
+          <div className="h-78">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
