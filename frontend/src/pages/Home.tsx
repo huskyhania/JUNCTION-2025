@@ -16,24 +16,6 @@ export default function Home() {
           <p className="text-muted-foreground mt-1">
             Here's what's happening with your finances this month
           </p>
-          <div className="mt-4">
-            <Tabs
-              value={viewMode}
-              onValueChange={(value) => setViewMode(value as "overview" | "detailed")}
-              className="w-auto"
-              >
-              <TabsList>
-                <TabsTrigger value="overview" className="gap-2">
-                  <LayoutGrid className="h-4 w-4" />
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger value="detailed" className="gap-2">
-                  <List className="h-4 w-4" />
-                  AI Insights
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
         </div>
       </div>
       <div className="space-y-6">
