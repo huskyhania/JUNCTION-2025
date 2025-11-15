@@ -75,7 +75,6 @@ export default function UpcomingPayments() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-muted-foreground" />
                   <span className="text-xl font-bold text-foreground">
                     €{payment.amount.toLocaleString()}
                   </span>

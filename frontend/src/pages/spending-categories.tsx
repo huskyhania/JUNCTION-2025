@@ -12,10 +12,10 @@ export default function SpendingCategories() {
         <h1 className="text-3xl font-bold mb-2 text-foreground">Spending Categories</h1>
         <p className="text-muted-foreground">Track your budget progress across different categories</p>
       </div>
+
+      <SpendingBubbleChart />
       
       <BudgetProgress />
-      
-      <SpendingBubbleChart />
       
       <div className="flex justify-center pt-4">
         <Link to="/transactions">

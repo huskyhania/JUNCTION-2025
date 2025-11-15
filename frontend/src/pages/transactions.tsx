@@ -1,9 +1,8 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { format } from "date-fns"
 import { Download, Filter } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "./columns"
-import { paymentsData } from "./payments-data"
 import { paymentsData as allPaymentsData } from "./payments-data"
 import { DateRangePicker } from "@/components/date-range-picker"
 import { Button } from "@/components/ui/button"
@@ -14,17 +13,42 @@ export default function Transactions() {
     to: Date | undefined
   }>({ from: undefined, to: undefined })
 
-  const handleDownload = () => {
-    let dataToExport = allPaymentsData
-    
-    if (dateRange.from && dateRange.to) {
-      dataToExport = allPaymentsData
+  // Filter data based on date range
+  const filteredData = useMemo(() => {
+    if (!dateRange.from && !dateRange.to) {
+      return allPaymentsData
     }
 
+    return allPaymentsData.filter((payment) => {
+      const paymentDate = new Date(payment.date)
+      paymentDate.setHours(0, 0, 0, 0) // Reset time to start of day for accurate comparison
+
+      if (dateRange.from && dateRange.to) {
+        const fromDate = new Date(dateRange.from)
+        fromDate.setHours(0, 0, 0, 0)
+        const toDate = new Date(dateRange.to)
+        toDate.setHours(23, 59, 59, 999) // End of day
+        
+        return paymentDate >= fromDate && paymentDate <= toDate
+      } else if (dateRange.from) {
+        const fromDate = new Date(dateRange.from)
+        fromDate.setHours(0, 0, 0, 0)
+        return paymentDate >= fromDate
+      } else if (dateRange.to) {
+        const toDate = new Date(dateRange.to)
+        toDate.setHours(23, 59, 59, 999)
+        return paymentDate <= toDate
+      }
+
+      return true
+    })
+  }, [dateRange])
+
+  const handleDownload = () => {
     const headers = ["ID", "Amount", "Status", "Description", "Date", "Category"]
     const csvContent = [
       headers.join(","),
-      ...dataToExport.map((payment) =>
+      ...filteredData.map((payment) =>
         [
           payment.id,
           payment.amount,
@@ -74,7 +98,7 @@ export default function Transactions() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={paymentsData} />
+      <DataTable columns={columns} data={filteredData} />
     </div>
   )
 }

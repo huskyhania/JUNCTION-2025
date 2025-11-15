@@ -5,7 +5,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-10">
       <h1 className="text-4xl text-blue-600 font-bold mb-6">
-        Bee Save
+        Bee Saver
       </h1>
 
       <p className="text-gray-500 mb-6 text-center">

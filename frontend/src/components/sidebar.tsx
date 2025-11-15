@@ -94,7 +94,7 @@ export function Sidebar() {
       {/* App Name */}
       <div className="p-4">
         <Link to="/home" className="flex items-center">
-          <h1 className="text-xl font-bold text-blue-600">Bee Save</h1>
+          <h1 className="text-xl font-bold text-blue-600">Bee Saver</h1>
         </Link>
       </div>
       
