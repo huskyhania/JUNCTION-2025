@@ -39,8 +39,15 @@ Frontend is displaying:
 
 It uses hardcoded values, should be replaced by the ones from database.
 
-Python script for starting backend and frontend all at once:
+Python script for starting backend and frontend all at once (should also work for mockback if docker is up):
 bash
 ```
 python3 start.py
 ```
+
+db inquiries
+curl http://localhost:3001/health
+curl http://localhost:3001/users
+
+e.g.
+curl http://localhost:3001/users/demo1/transactions

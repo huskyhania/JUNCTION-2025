@@ -9,6 +9,33 @@ const prisma = new PrismaClient();
 
 const PORT = 3001;
 
+/**
+ * Normalizes optional date query parameters.
+ * Returns `undefined` when the param is missing and `null` when the value cannot be parsed as a date.
+ */
+const parseDateParam = (value: unknown): Date | undefined | null => {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  const normalized = Array.isArray(value) ? value[0] : value;
+  if (typeof normalized !== "string") {
+    return null;
+  }
+
+  const trimmed = normalized.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+
+  return parsed;
+};
+
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
@@ -30,15 +57,30 @@ app.get("/users/:userId/transactions", async (req, res) => {
 	}
 
 
-	const dateFilter: any = {};
-	if (from) dateFilter.gte = new Date(from as string);
-	if (to) dateFilter.lte = new Date(to as string);
+	const fromDate = parseDateParam(from);
+	const toDate = parseDateParam(to);
+
+	if (fromDate === null || toDate === null) {
+	  return res.status(400).json({
+		error: "Query parameters `from` and `to` must be valid ISO date strings.",
+	  });
+	}
+
+	if (fromDate && toDate && fromDate > toDate) {
+	  return res.status(400).json({
+		error: "`from` must be earlier than or equal to `to`.",
+	  });
+	}
+
+	const dateFilter: Record<string, Date> = {};
+	if (fromDate) dateFilter.gte = fromDate;
+	if (toDate) dateFilter.lte = toDate;
 
 	const whereClause: any = {
 	  userId,
 	};
 
-	if (from || to) {
+	if (fromDate || toDate) {
 	  whereClause.date = dateFilter;
 	}
 
@@ -48,7 +90,7 @@ app.get("/users/:userId/transactions", async (req, res) => {
 	});
 
 	res.json({
-	  user_id: userId,
+	  userId,
 	  count: txs.length,
 	  transactions: txs,
 	});
