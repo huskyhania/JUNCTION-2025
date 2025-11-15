@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Send, Bot, User } from "lucide-react"
+import { AlertCircle } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function Chat() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([])
@@ -10,7 +12,7 @@ export default function Chat() {
   const [isConnecting, setIsConnecting] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const socketRef = useRef<WebSocket | null>(null)
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const reconnectTimeoutRef = useRef<number | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const reconnectAttempts = useRef(0)
   const maxReconnectAttempts = 5
@@ -32,7 +34,8 @@ export default function Chat() {
     setError(null)
 
     try {
-      const ws = new WebSocket(WS_URL)
+      const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3000/'
+      const ws = new WebSocket(wsUrl)
       socketRef.current = ws
 
       ws.onopen = () => {
@@ -183,7 +186,7 @@ export default function Chat() {
                 className={`flex gap-3 ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 {m.role === "ai" && (
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                     <Bot className="h-4 w-4 text-blue-600" />
                   </div>
                 )}
@@ -197,9 +200,12 @@ export default function Chat() {
                   <div className="text-sm whitespace-pre-wrap">{m.text}</div>
                 </div>
                 {m.role === "user" && (
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                    <User className="h-4 w-4 text-gray-600" />
-                  </div>
+                  <Avatar className="shrink-0 w-8 h-8">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback className="bg-gray-200 text-gray-600">
+                      <User className="h-4 w-4" />
+                    </AvatarFallback>
+                  </Avatar>
                 )}
               </div>
             ))

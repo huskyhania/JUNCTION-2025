@@ -22,8 +22,6 @@ const geminiModel = genAI.getGenerativeModel({
   model: "gemini-2.0-flash"
 });
 
-console.log('wtf: ', process.env.API_KEY);
-
 fastify.register(require('@fastify/websocket'));
 
 // CORS configuration
