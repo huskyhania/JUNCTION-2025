@@ -3,9 +3,7 @@ import { useUser } from "@/contexts/UserContext"
 import { Coins, Image, Check, Sparkles, Tag, Eye, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Sale3DModal } from "@/components/sale-3d-modal"
 import { WallpaperPreviewModal } from "@/components/wallpaper-preview-modal"
-import { Model3DPreview } from "@/components/3d-model-preview"
 
 interface Wallpaper {
   id: string
@@ -80,7 +78,6 @@ const wallpapers: Wallpaper[] = [
 export default function Store() {
   const { user, addCoins, setCurrentWallpaper } = useUser()
   const [purchasedWallpapers, setPurchasedWallpapers] = useState<string[]>([])
-  const [is3DModalOpen, setIs3DModalOpen] = useState(false)
   const [previewWallpaper, setPreviewWallpaper] = useState<Wallpaper | null>(null)
 
   const handlePurchase = (wallpaper: Wallpaper) => {
@@ -118,7 +115,6 @@ export default function Store() {
 
   return (
     <div className="p-6 space-y-6">
-      <Sale3DModal isOpen={is3DModalOpen} onClose={() => setIs3DModalOpen(false)} />
       <WallpaperPreviewModal
         isOpen={previewWallpaper !== null}
         onClose={() => setPreviewWallpaper(null)}
@@ -185,7 +181,9 @@ export default function Store() {
                     </div>
                   )}
                   {wallpaper.type === "3d" ? (
-                    <Model3DPreview className="w-full h-full" />
+                    <div className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                      <div className="text-white/50 text-sm">3D Preview Unavailable</div>
+                    </div>
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Image className="h-8 w-8 text-white/50" />
