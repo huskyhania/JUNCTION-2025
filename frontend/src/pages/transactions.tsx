@@ -1,69 +1,24 @@
-import { useState, useMemo } from "react"
-import { format, startOfWeek, endOfWeek, startOfMonth, startOfDay, endOfDay } from "date-fns"
-import { Download, Filter } from "lucide-react"
+import { useMemo } from "react"
+import { format } from "date-fns"
+import { Download } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "./columns"
-import { paymentsData as allPaymentsData } from "./payments-data"
+import { paymentsData as allPaymentsData, filterPaymentsByDateRange } from "./payments-data"
 import { DateRangePicker } from "@/components/date-range-picker"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useTimeframe, type TimeframePreset } from "@/context/timeframe-context"
 
 export default function Transactions() {
-  const [dateRange, setDateRange] = useState<{
-    from: Date | undefined
-    to: Date | undefined
-  }>({ from: undefined, to: undefined })
-  const [activeFilter, setActiveFilter] = useState<"day" | "week" | "month" | null>(null)
+  const { range, timeframe, setPreset, setCustomRange } = useTimeframe()
 
-  const today = new Date(2025, 10, 15) // November 15, 2025
+  const filteredData = useMemo(
+    () => filterPaymentsByDateRange(allPaymentsData, range),
+    [range]
+  )
 
-  // Filter data based on date range
-  const filteredData = useMemo(() => {
-    if (!dateRange.from && !dateRange.to) {
-      return allPaymentsData
-    }
-
-    return allPaymentsData.filter((payment) => {
-      const paymentDate = new Date(payment.date)
-      paymentDate.setHours(0, 0, 0, 0) // Reset time to start of day for accurate comparison
-
-      if (dateRange.from && dateRange.to) {
-        const fromDate = new Date(dateRange.from)
-        fromDate.setHours(0, 0, 0, 0)
-        const toDate = new Date(dateRange.to)
-        toDate.setHours(23, 59, 59, 999) // End of day
-        
-        return paymentDate >= fromDate && paymentDate <= toDate
-      } else if (dateRange.from) {
-        const fromDate = new Date(dateRange.from)
-        fromDate.setHours(0, 0, 0, 0)
-        return paymentDate >= fromDate
-      } else if (dateRange.to) {
-        const toDate = new Date(dateRange.to)
-        toDate.setHours(23, 59, 59, 999)
-        return paymentDate <= toDate
-      }
-
-      return true
-    })
-  }, [dateRange])
-
-  const handleQuickFilter = (filterType: "day" | "week" | "month") => {
-    setActiveFilter(filterType)
-    
-    if (filterType === "day") {
-      const dayStart = startOfDay(today)
-      const dayEnd = endOfDay(today)
-      setDateRange({ from: dayStart, to: dayEnd })
-    } else if (filterType === "week") {
-      const weekStart = startOfWeek(today, { weekStartsOn: 1 }) // Monday
-      const weekEnd = endOfWeek(today, { weekStartsOn: 1 })
-      setDateRange({ from: weekStart, to: weekEnd })
-    } else if (filterType === "month") {
-      const monthStart = startOfMonth(today)
-      const monthEnd = endOfDay(today) // Today since we're in the middle of the month
-      setDateRange({ from: monthStart, to: monthEnd })
-    }
+  const handleQuickFilter = (filterType: Extract<TimeframePreset, "day" | "week" | "month">) => {
+    setPreset(filterType)
   }
 
   const handleDownload = () => {
@@ -85,10 +40,11 @@ export default function Transactions() {
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
     const link = document.createElement("a")
     const url = URL.createObjectURL(blob)
+    const formatBound = (date?: Date) => (date ? format(date, "yyyy-MM-dd") : "all")
     link.setAttribute("href", url)
     link.setAttribute(
       "download",
-      `transactions-${dateRange.from ? format(dateRange.from, "yyyy-MM-dd") : "all"}-${dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : "all"}.csv`
+      `transactions-${formatBound(range?.from)}-${formatBound(range?.to)}.csv`
     )
     link.style.visibility = "hidden"
     document.body.appendChild(link)
@@ -106,34 +62,33 @@ export default function Transactions() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3 flex-wrap">
           <DateRangePicker
-            date={dateRange}
+            date={range}
             onDateChange={(range) => {
-              setDateRange(range)
-              setActiveFilter(null) // Clear active filter when manually selecting dates
+              setCustomRange(range)
             }}
           />
           <div className="flex items-center gap-2 border-l pl-3">
             <Button
-              variant={activeFilter === "day" ? "default" : "outline"}
+              variant={timeframe.preset === "day" ? "default" : "outline"}
               size="sm"
               onClick={() => handleQuickFilter("day")}
-              className={cn(activeFilter === "day" && "bg-blue-600 hover:bg-blue-700")}
+              className={cn(timeframe.preset === "day" && "bg-blue-600 hover:bg-blue-700")}
             >
               Day
             </Button>
             <Button
-              variant={activeFilter === "week" ? "default" : "outline"}
+              variant={timeframe.preset === "week" ? "default" : "outline"}
               size="sm"
               onClick={() => handleQuickFilter("week")}
-              className={cn(activeFilter === "week" && "bg-blue-600 hover:bg-blue-700")}
+              className={cn(timeframe.preset === "week" && "bg-blue-600 hover:bg-blue-700")}
             >
               Week
             </Button>
             <Button
-              variant={activeFilter === "month" ? "default" : "outline"}
+              variant={timeframe.preset === "month" ? "default" : "outline"}
               size="sm"
               onClick={() => handleQuickFilter("month")}
-              className={cn(activeFilter === "month" && "bg-blue-600 hover:bg-blue-700")}
+              className={cn(timeframe.preset === "month" && "bg-blue-600 hover:bg-blue-700")}
             >
               Month
             </Button>

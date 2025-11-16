@@ -10,6 +10,7 @@ import {
 
 import { Layout } from './components/layout'
 import { UserProvider } from './contexts/UserContext'
+import { TimeframeProvider } from './context/timeframe-context'
 import { Loader2 } from 'lucide-react'
 
 // Lazy load pages for faster initial load
@@ -38,28 +39,30 @@ const LoadingFallback = () => (
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <UserProvider>
-      <BrowserRouter>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<App />} />
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/month-summary" element={<MonthSummary />} />
-              <Route path="/spending-categories" element={<SpendingCategories />} />
-              <Route path="/opportunity-cost" element={<OpportunityCost />} />
-              <Route path="/upcoming-payments" element={<UpcomingPayments />} />
-              <Route path="/subscriptions" element={<Subscriptions />} />
-              <Route path="/bnpl" element={<BNPL />} />
-              <Route path="/money-story" element={<MoneyStory />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/insight" element={<Insight />} />
-              <Route path="/game" element={<Game />} />
-              <Route path="/store" element={<Store />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+      <TimeframeProvider>
+        <BrowserRouter>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<App />} />
+              <Route element={<Layout />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/month-summary" element={<MonthSummary />} />
+                <Route path="/spending-categories" element={<SpendingCategories />} />
+                <Route path="/opportunity-cost" element={<OpportunityCost />} />
+                <Route path="/upcoming-payments" element={<UpcomingPayments />} />
+                <Route path="/subscriptions" element={<Subscriptions />} />
+                <Route path="/bnpl" element={<BNPL />} />
+                <Route path="/money-story" element={<MoneyStory />} />
+                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/insight" element={<Insight />} />
+                <Route path="/game" element={<Game />} />
+                <Route path="/store" element={<Store />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </TimeframeProvider>
     </UserProvider>
   </React.StrictMode>,
 )

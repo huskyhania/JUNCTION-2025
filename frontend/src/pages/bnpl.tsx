@@ -100,7 +100,7 @@ export default function BNPL() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold mb-2 text-foreground">BNPL / Klarna Overview</h1>
+        <h1 className="text-3xl font-bold mb-2 text-foreground">BNPL Overview</h1>
         <p className="text-muted-foreground">Track your Buy Now Pay Later purchases and payment schedules</p>
       </div>
 

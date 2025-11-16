@@ -1,5 +1,7 @@
+import { useMemo } from "react"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from "recharts"
-import { paymentsData } from "@/pages/payments-data"
+import { paymentsData, filterPaymentsByDateRange } from "@/pages/payments-data"
+import { useTimeframe } from "@/context/timeframe-context"
 
 const categoryColors: Record<string, string> = {
   Food: "#22c55e",
@@ -152,9 +154,14 @@ const renderActiveShape = (props: any) => {
 };
 
 export function SpendingDonutChart() {
+  const { range } = useTimeframe()
+  const scopedPayments = useMemo(
+    () => filterPaymentsByDateRange(paymentsData, range),
+    [range]
+  )
   const categoryMap = new Map<string, { total: number; count: number }>()
 
-  paymentsData.forEach((payment) => {
+  scopedPayments.forEach((payment) => {
     if (payment.category && payment.status !== "failed") {
       const current = categoryMap.get(payment.category) || { total: 0, count: 0 }
       categoryMap.set(payment.category, {

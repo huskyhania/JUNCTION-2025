@@ -63,7 +63,7 @@ const sidebarSections = [
     href: "/subscriptions",
   },
   {
-    name: "BNPL / Klarna Overview",
+    name: "BNPL Overview",
     icon: Receipt,
     href: "/bnpl",
   },

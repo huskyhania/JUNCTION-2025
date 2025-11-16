@@ -1,8 +1,12 @@
 import { Outlet } from "react-router-dom"
 import { Sidebar } from "./sidebar"
 import { Navbar } from "./navbar"
+
 import { useUser } from "@/contexts/UserContext"
 import { cn } from "@/lib/utils"
+
+import { TimeframeToolbar } from "./timeframe-toolbar"
+
 
 export function Layout() {
   const { currentWallpaper } = useUser()
@@ -24,6 +28,7 @@ export function Layout() {
       {/* Main content area with navbar */}
       <div className="flex flex-1 flex-col min-w-0">
         <Navbar />
+        <TimeframeToolbar />
         <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>

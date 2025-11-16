@@ -1,5 +1,7 @@
+import { useMemo } from "react"
 import { TrendingUp, TrendingDown } from "lucide-react"
-import { paymentsData } from "@/pages/payments-data"
+import { paymentsData, filterPaymentsByDateRange } from "@/pages/payments-data"
+import { useTimeframe } from "@/context/timeframe-context"
 
 interface BudgetItem {
   category: string
@@ -35,11 +37,17 @@ const categoryColors: Record<string, string> = {
 }
 
 export function BudgetProgress() {
+  const { range } = useTimeframe()
+  const scopedPayments = useMemo(
+    () => filterPaymentsByDateRange(paymentsData, range),
+    [range]
+  )
+
   // Calculate spent amounts per category from paymentsData
   // Only count successful and processing transactions (exclude failed and Income)
   const categorySpent = new Map<string, number>()
   
-  paymentsData.forEach((payment) => {
+  scopedPayments.forEach((payment) => {
     if (
       payment.category &&
       payment.category !== "Income" &&

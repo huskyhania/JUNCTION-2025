@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { Lightbulb, TrendingUp, AlertCircle, Target, Sparkles, Loader2 } from "lucide-react"
-import { paymentsData, insightsTransactions } from "./payments-data"
+import { paymentsData, filterPaymentsByDateRange } from "./payments-data"
+import { useTimeframe } from "@/context/timeframe-context"
 
 interface Insight {
   id?: string
@@ -36,12 +37,14 @@ export default function Insight() {
   const [error, setError] = useState<string | null>(null)
   const [analysis, setAnalysis] = useState<any>(null)
   const navigate = useNavigate()
+  const { range } = useTimeframe()
 
-  useEffect(() => {
-    fetchInsights()
-  }, [])
+  const scopedTransactions = useMemo(
+    () => filterPaymentsByDateRange(paymentsData, range),
+    [range]
+  )
 
-  const fetchInsights = async () => {
+  const fetchInsights = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -52,9 +55,7 @@ export default function Insight() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          transactions: insightsTransactions.length
-            ? insightsTransactions
-            : paymentsData,
+          transactions: scopedTransactions,
         }),
       })
 
@@ -92,7 +93,11 @@ export default function Insight() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [scopedTransactions])
+
+  useEffect(() => {
+    fetchInsights()
+  }, [fetchInsights])
   if (loading) {
     return (
       <div className="p-6 space-y-6">
