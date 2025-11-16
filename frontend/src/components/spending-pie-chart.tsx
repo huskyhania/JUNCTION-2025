@@ -1,29 +1,18 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from "recharts"
 import { paymentsData } from "@/pages/payments-data"
 
-// const categoryColors: Record<string, string> = {
-//   Food: "#22c55e",
-//   Utilities: "#eab308",
-//   Housing: "#3b82f6",
-//   Transportation: "#8b5cf6",
-//   Shopping: "#ec4899",
-//   Health: "#f59e0b",
-//   Entertainment: "#ef4444",
-//   Income: "#10b981",
-//   Education: "#06b6d4",
-//   Travel: "#f97316",
-// }
 
 const categoryColors: Record<string, string> = {
-  Food: "#10b981", // Green
-  Utilities: "#eab308", // Yellow
-  Housing: "#3b82f6", // Blue
-  Transportation: "#8b5cf6", // Violet
-  Shopping: "#ff7f50", // Coral
-  Health: "#14b8a6", // Teal (Blue-Green)
-  Entertainment: "#6366f1", // Indigo (Blue-Violet)
-  Education: "#06b6d4", // Cyan
-  Travel: "#f97316", // Orange (Was light purple)
+
+  Housing: "#ffd166", // Blue
+  Shopping: "#83d483", // Coral
+  Utilities: "#06d6a0", // Yellow
+  Health: "#0cb0a9", // Teal (Blue-Green)
+  Entertainment: "#118ab2", // Indigo (Blue-Violet)
+  Food: "#0c637f", // Green
+  Education: "#073b4c", // Cyan
+  Transportation: "#ef476f", // Violet
+  Travel: "#f78c6b", // Orange (Was light purple)
   // Income: "#10b981", // (Filtered out, but here for completeness) <-- Removed this line
 }
 
@@ -206,8 +195,8 @@ export function SpendingDonutChart() {
               nameKey="category"
               cx="50%"
               cy="50%"
-              innerRadius="25%"
-              outerRadius="50%" // Slightly smaller outer radius to make space for labels
+              innerRadius="35%"
+              outerRadius="70%" // Slightly smaller outer radius to make space for labels
               paddingAngle={0}
               fill="#8884d8"
               label={renderCustomizedLabel} // Use custom label component
