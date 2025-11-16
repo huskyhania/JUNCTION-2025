@@ -218,3 +218,7 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+.font-clash-display {
+  font-family: 'Clash Display', sans-serif;
+}

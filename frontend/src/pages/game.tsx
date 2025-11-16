@@ -17,7 +17,7 @@ export default function Game() {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [result, setResult] = useState<any>(null)
   const [achievements, setAchievements] = useState<string[]>([])
-  const [loadingChoice, setLoadingChoice] = useState(false)
+  const [_loadingChoice, setLoadingChoice] = useState(false)
 
   const loadScenario = async () => {
     setLoading(true)

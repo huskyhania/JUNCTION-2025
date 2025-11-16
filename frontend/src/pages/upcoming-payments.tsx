@@ -1,4 +1,4 @@
-import { Calendar, DollarSign, AlertCircle } from "lucide-react"
+import { Calendar, AlertCircle } from "lucide-react"
 
 interface UpcomingPayment {
   id: string

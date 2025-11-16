@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { format, startOfWeek, endOfWeek, startOfMonth, startOfDay, endOfDay } from "date-fns"
-import { Download, Filter } from "lucide-react"
+import { Download } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "./columns"
 import { paymentsData as allPaymentsData } from "./payments-data"

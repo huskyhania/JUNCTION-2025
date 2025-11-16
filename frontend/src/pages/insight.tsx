@@ -130,12 +130,6 @@ export default function Insight() {
     )
   }
 
-  const calculatePotentialSavings = () => {
-    if (!analysis) return 0
-    // Estimate potential savings based on insights
-    const savingsInsights = insights.filter(i => i.type === "opportunity" || i.type === "tip")
-    return savingsInsights.length * 50 // Rough estimate
-  }
 
   return (
     <div className="p-6 space-y-6">

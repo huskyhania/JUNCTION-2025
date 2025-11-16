@@ -123,9 +123,9 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="left" className="w-72 p-0">
               <div className="flex h-full flex-col">
-                <div className="flex h-16 items-center border-b px-6">
-                  <h1 className="text-xl font-bold text-blue-600 pl-4">Bee Saver</h1>
-                </div>
+                {/* <div className="flex h-16 items-center border-b px-6 gap-2">
+                  <h1 className="text-xl font-bold text-blue-600 font-clash-display">Bee Saver</h1>
+                </div> */}
                 <div className="border-b p-4">
                   <div className="flex items-center gap-3">
                     <Avatar>

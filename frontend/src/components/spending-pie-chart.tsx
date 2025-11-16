@@ -106,18 +106,9 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, fill, percent, n
 // Custom Shape for the "3D" effect
 const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload: _payload, percent: _percent, value: _value } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
-
-  // Slightly displace the active slice to give a "popping out" effect
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? 'start' : 'end';
 
   // Apply a shadow/depth effect by drawing a slightly offset darker slice
   const shadowOffset = 5; // How much the shadow is offset

@@ -95,7 +95,7 @@ export default function MoneyStory() {
       <div className="relative">
         <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200"></div>
         <div className="space-y-6">
-          {storyEvents.map((event, index) => (
+          {storyEvents.map((event) => (
             <div key={event.id} className="relative flex items-start gap-4">
               {/* Timeline Dot */}
               <div className={`relative z-10 flex items-center justify-center w-16 h-16 rounded-full border-4 bg-white ${
