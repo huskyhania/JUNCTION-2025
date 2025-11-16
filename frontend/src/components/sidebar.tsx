@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import beeAvatar from "@/assets/bee.png"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -104,7 +105,7 @@ export function Sidebar() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={beeAvatar} />
               <AvatarFallback>AL</AvatarFallback>
             </Avatar>
             <div className="flex flex-col min-w-0 flex-1">
