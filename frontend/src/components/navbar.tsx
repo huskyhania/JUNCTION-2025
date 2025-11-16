@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { useUser } from "@/contexts/UserContext"
+import beeAvatar from "@/assets/bee.png"
 
 const navigation = [
   {
@@ -128,7 +129,7 @@ export function Navbar() {
                 <div className="border-b p-4">
                   <div className="flex items-center gap-3">
                     <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage src={beeAvatar} />
                       <AvatarFallback>JD</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
