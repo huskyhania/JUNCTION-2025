@@ -4,7 +4,6 @@ import { SavingsGoals } from "@/components/savings-goals";
 import { FinancialHealthScore } from "@/components/financial-health-score";
 import { QuickStats } from "@/components/quick-stats";
 import { TrendIndicators } from "@/components/trend-indicators";
-import { GoalBar } from "@/components/goal-bar";
 
 //three exemplary widgets for demo of dashboard
 export default function Dashboard() {

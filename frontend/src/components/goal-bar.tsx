@@ -17,7 +17,7 @@ export function GoalBar({
   goal,
   label,
   unit = "€",
-  showPercentage = true,
+  showPercentage: _showPercentage = true,
   showRemaining = true,
   className,
   barColor,

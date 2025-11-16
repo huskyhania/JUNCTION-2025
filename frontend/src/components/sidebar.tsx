@@ -12,7 +12,6 @@ import {
   ChevronDown,
   Settings,
   LogOut,
-  GraduationCap,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -37,7 +36,7 @@ const sidebarSections = [
   },
   {
     name: "Spending Categories",
-    description: "Bars/Bubbles",
+    description: "Charts",
     icon: PieChart,
     href: "/spending-categories",
   },
@@ -95,8 +94,9 @@ export function Sidebar() {
     <div className="flex h-screen w-72 flex-col bg-background shrink-0">
       {/* App Name */}
       <div className="p-4">
-        <Link to="/home" className="flex items-center">
-          <h1 className="text-xl font-bold text-blue-600">Bee Saver</h1>
+        <Link to="/home" className="flex items-center gap-2 justify-center">
+          {/* <img src={beeAvatar} alt="Bee Saver Logo" className="w-8 h-8" /> */}
+          <h1 className="text-xl font-bold text-blue-600 font-clash-display">Bee Saver</h1>
         </Link>
       </div>
       

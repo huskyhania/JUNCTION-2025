@@ -11,7 +11,7 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold">Yo 🤟🏻 {user?.name || "User"}, welcome!</h1>
+            <h1 className="text-3xl font-bold">Hi 🤟🏻 {user?.name || "User"}, welcome!</h1>
             {user?.currentBadge && (
               <div className="flex items-center gap-1 px-2 py-1 bg-yellow-100 rounded-full">
                 <Award className="h-4 w-4 text-yellow-600" />

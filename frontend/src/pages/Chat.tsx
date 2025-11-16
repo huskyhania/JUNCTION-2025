@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Send, Bot, User } from "lucide-react"
 import { AlertCircle } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import beeAvatar from "@/assets/bee.png"
 
 
 // WebSocket URL - can be configured via environment variable
@@ -242,7 +243,7 @@ export default function Chat() {
                 </div>
                 {m.role === "user" && (
                   <Avatar className="shrink-0 w-8 h-8">
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src={beeAvatar} />
                     <AvatarFallback className="bg-gray-200 text-gray-600">
                       <User className="h-4 w-4" />
                     </AvatarFallback>

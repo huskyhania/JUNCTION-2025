@@ -465,12 +465,19 @@ function generateFallbackInsights(analysis) {
   return insights;
 }
 
-fastify.listen({ port: 3000 }, err => {
+const PORT = process.env.PORT || 3000;
+const HOST = '0.0.0.0'; // Always bind to 0.0.0.0 for Render
+
+console.log(`Starting server on ${HOST}:${PORT}...`);
+
+fastify.listen({ port: PORT, host: HOST }, (err, address) => {
   if (err) {
+    console.error('Error starting server:', err);
     fastify.log.error(err);
     process.exit(1);
   }
-  console.log("Server running on http://localhost:3000/");
-  console.log("WebSocket server running on ws://localhost:3000/");
+  console.log(`✅ Server running on ${address}`);
+  console.log(`✅ WebSocket server running on ws://${HOST}:${PORT}/`);
+  console.log(`✅ Listening on all interfaces (0.0.0.0:${PORT})`);
 });
 
