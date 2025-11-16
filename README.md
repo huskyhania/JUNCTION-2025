@@ -59,6 +59,7 @@ curl -X POST http://localhost:3001/users/demo1/ai-responses ^
   -H "Content-Type: application/json" ^
   -d "{\"prompt\":\"What should I do about groceries?\",\"response\":\"Cut impulse snacks by 20%.\",\"model\":\"meta-llama\",\"metadata\":{\"tags\":[\"groceries\"]}}"
 ```
+Live chat replies from the frontend are now stored automatically through the backend WebSocket bridge, so `/users/:id/ai-responses` will grow as you talk to the coach.
 
 After pulling changes run in `mockbank/`:
 ```
@@ -67,3 +68,30 @@ npx prisma migrate dev
 npm run seed
 ```
 to apply the new `AiResponse` table and sample insights.
+
+## Environment quick reference
+
+Backend (`backend/.env`):
+
+```
+API_KEY=...                # Featherless key
+MOCKBANK_API_BASE=http://localhost:3001
+MOCKBANK_USER_ID=demo1     # default user to associate chat replies with
+CHAT_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
+```
+
+MockBank (`mockbank/.env` add-on):
+
+```
+ALLOWED_ORIGINS=http://localhost:5173
+```
+
+Frontend (`frontend/.env`):
+
+```
+VITE_API_URL=http://localhost:3000
+VITE_WS_URL=ws://localhost:3000/
+VITE_MOCKBANK_USER_ID=demo1
+```
+
+Adjust these if you deploy to different hosts/ports or want to test with another mock user.

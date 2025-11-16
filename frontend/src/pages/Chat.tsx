@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+
 import { Send, Bot, User } from "lucide-react"
 import { AlertCircle } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import beeAvatar from "@/assets/bee.png"
+
+
+// WebSocket URL - can be configured via environment variable
+const WS_URL = import.meta.env.VITE_WS_URL || "ws://localhost:3000/"
+const USER_ID = import.meta.env.VITE_MOCKBANK_USER_ID || "demo1"
+
 
 export default function Chat() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([])
@@ -17,6 +25,8 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const reconnectAttempts = useRef(0)
   const maxReconnectAttempts = 5
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [pendingPrompt, setPendingPrompt] = useState<string | null>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -111,20 +121,51 @@ export default function Chat() {
     }
   }, [])
 
-  const sendMessage = () => {
-    if (!input.trim()) return
+  useEffect(() => {
+    const prompt = searchParams.get("prompt")
+    if (prompt) {
+      setPendingPrompt(prompt)
+      setInput(prompt)
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    if (isConnected && pendingPrompt) {
+      if (sendChatMessage(pendingPrompt, "deep_dive")) {
+        setPendingPrompt(null)
+        setInput("")
+        const params = new URLSearchParams(searchParams)
+        params.delete("prompt")
+        setSearchParams(params, { replace: true })
+      }
+    }
+  }, [isConnected, pendingPrompt])
+
+  const sendChatMessage = (text: string, origin: "deep_dive" | "user" = "user") => {
+    const trimmed = text.trim()
+    if (!trimmed) return false
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
       setError("Not connected to server. Attempting to reconnect...")
       connectWebSocket()
-      return
+      return false
     }
 
-    const userMessage = input.trim()
-    socketRef.current.send(userMessage)
-
-    setMessages((prev) => [...prev, { role: "user", text: userMessage }])
-    setInput("")
+    const payload = JSON.stringify({
+      userId: USER_ID,
+      message: trimmed,
+      origin,
+    })
+    socketRef.current.send(payload)
+    setMessages((prev) => [...prev, { role: "user", text: trimmed }])
     setError(null)
+    return true
+  }
+
+  const sendMessage = () => {
+    if (!sendChatMessage(input, "user")) {
+      return
+    }
+    setInput("")
   }
 
   const handleReconnect = () => {

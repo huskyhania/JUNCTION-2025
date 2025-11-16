@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 import { Lightbulb, TrendingUp, AlertCircle, Target, Sparkles, Loader2 } from "lucide-react"
-import { paymentsData } from "./payments-data"
+import { paymentsData, filterPaymentsByDateRange } from "./payments-data"
+import { useTimeframe } from "@/context/timeframe-context"
 
 interface Insight {
   id?: string
@@ -34,12 +36,15 @@ export default function Insight() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [analysis, setAnalysis] = useState<any>(null)
+  const navigate = useNavigate()
+  const { range } = useTimeframe()
 
-  useEffect(() => {
-    fetchInsights()
-  }, [])
+  const scopedTransactions = useMemo(
+    () => filterPaymentsByDateRange(paymentsData, range),
+    [range]
+  )
 
-  const fetchInsights = async () => {
+  const fetchInsights = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -50,7 +55,7 @@ export default function Insight() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          transactions: paymentsData,
+          transactions: scopedTransactions,
         }),
       })
 
@@ -88,7 +93,11 @@ export default function Insight() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [scopedTransactions])
+
+  useEffect(() => {
+    fetchInsights()
+  }, [fetchInsights])
   if (loading) {
     return (
       <div className="p-6 space-y-6">
@@ -193,7 +202,16 @@ export default function Insight() {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground mb-1">{insight.title}</h3>
-                      <p className="text-sm text-muted-foreground">{insight.description}</p>
+                      <p className="text-sm text-muted-foreground mb-2">{insight.description}</p>
+                      <button
+                        onClick={() => {
+                          const prompt = `Help me understand "${insight.title}". ${insight.description}`
+                          navigate(`/chat?prompt=${encodeURIComponent(prompt)}`)
+                        }}
+                        className="text-sm text-blue-600 hover:underline"
+                      >
+                        Deep dive
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -213,7 +231,7 @@ export default function Insight() {
           <div className="bg-white p-4 rounded-xl shadow-sm">
             <div className="text-sm text-muted-foreground mb-1">Net Balance</div>
             <div className={`text-2xl font-bold ${analysis.netBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              €{analysis.netBalance.toFixed(2)}
+              EUR {analysis.netBalance.toFixed(2)}
             </div>
           </div>
           <div className="bg-white p-4 rounded-xl shadow-sm">

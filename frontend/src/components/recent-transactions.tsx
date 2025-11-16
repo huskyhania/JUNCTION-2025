@@ -1,5 +1,7 @@
+import { useMemo } from "react"
 import { ArrowUpRight, ArrowDownRight } from "lucide-react"
-import { paymentsData } from "@/pages/payments-data"
+import { paymentsData, filterPaymentsByDateRange } from "@/pages/payments-data"
+import { useTimeframe } from "@/context/timeframe-context"
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -9,8 +11,15 @@ const statusColors = {
 }
 
 export function RecentTransactions() {
-  // Get the 5 most recent transactions
-  const recentTransactions = paymentsData.slice(0, 5)
+  const { range } = useTimeframe()
+  // Get the 5 most recent transactions for the active timeframe
+  const recentTransactions = useMemo(() => {
+    const scoped = filterPaymentsByDateRange(paymentsData, range)
+    return scoped
+      .slice()
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5)
+  }, [range])
 
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm">

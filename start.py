@@ -2,9 +2,34 @@ import subprocess
 import time
 import sys
 import os
+import socket
 
 MIN_NODE_VERSION = (20, 0, 0)  # bump to (20, 0, 0) if you REALLY need Node 20
 
+# === CHANGE THESE TO MATCH YOUR ACTUAL SERVICES ===
+DB_HOST = "localhost"
+DB_PORT = 3001      # example: mockbank dev server port
+TIMEOUT = 120
+BACKEND_HOST = "localhost"
+BACKEND_PORT = 3000 # example: backend server port
+# ================================================
+
+def wait_for_port(host, port, timeout=60, label="service"):
+    """Wait until a TCP port is accepting connections, or timeout."""
+    print(f"[INFO] Waiting for {label} on {host}:{port} (timeout {timeout}s)...")
+    start = time.time()
+    while time.time() - start < timeout:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(1.0)
+            try:
+                s.connect((host, port))
+                print(f"[OK] {label} is up on {host}:{port}")
+                return True
+            except (OSError, ConnectionRefusedError):
+                time.sleep(1)
+
+    print(f"[ERROR] Timeout while waiting for {label} on {host}:{port}")
+    return False
 
 def check_node_version():
     """Returns (major, minor, patch) or None if node missing."""
@@ -73,6 +98,7 @@ def ensure_env_file(path):
         print(f"Creating .env in {path}")
         with open(env_path, "w") as f:
             f.write('DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mockbank?schema=public"\n')
+            f.write('ALLOWED_ORIGINS=http://localhost:5173"\n')
 
 def main():
     backend_dir = "backend"    # <- CHANGE THIS if your folder is named differently
@@ -114,8 +140,17 @@ def main():
     backend = run_process("node server.js", cwd=backend_dir)
 
 
-
-    time.sleep(2)
+    try:
+        if not wait_for_port(DB_HOST, DB_PORT, timeout=TIMEOUT, label="database"):
+            raise RuntimeError("Database service did not become ready in time.")
+        if not wait_for_port(BACKEND_HOST, BACKEND_PORT, timeout=TIMEOUT, label="backend"):
+            raise RuntimeError("Backend service did not become ready in time.")
+    except Exception as e:
+        print(f"[FATAL] {e}")
+        print("[INFO] Killing started processes...")
+        database.terminate()
+        backend.terminate()
+        sys.exit(1)
 
     # STEP 5 — Start frontend
     print("Starting frontend (npm run dev)...")

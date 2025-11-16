@@ -84,6 +84,9 @@ fastify.register(require('@fastify/cors'), {
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 });
 
+const MOCKBANK = process.env.MOCKBANK_API_BASE || "http://localhost:3001";
+
+
 fastify.register(async function (fastify) {
 
   // REST endpoint for AI insights
@@ -152,6 +155,20 @@ Return ONLY a valid JSON array of insights, no other text. Example format:
       console.error("Error generating insights:", err);
       return reply.status(500).send({ error: err.message });
     }
+  });
+
+  fastify.get("/api/mockbank/users/:userId/transactions", async (request, reply) => {
+    const { userId } = request.params;
+    const query = new URLSearchParams(request.query).toString();
+    const url = `${MOCKBANK}/users/${encodeURIComponent(userId)}/transactions${query ? `?${query}` : ""}`;
+
+    const res = await fetch(url);
+    if (!res.ok) {
+      fastify.log.error(`MockBank proxy failed: ${res.status} ${await res.text()}`);
+      return reply.status(502).send({ error: "MockBank unreachable" });
+    }
+
+    return reply.send(await res.json());
   });
 
   fastify.post('/api/gemini', async (request, reply) => {
@@ -292,7 +309,28 @@ Return ONLY a valid JSON array of insights, no other text. Example format:
 
     socket.on('message', async (rawMsg) => {
       try {
-        const message = rawMsg.toString();
+        const rawText = rawMsg.toString();
+        let parsedPayload;
+        try {
+          parsedPayload = JSON.parse(rawText);
+        } catch {
+          parsedPayload = null;
+        }
+
+        const incomingMessage = typeof parsedPayload?.message === "string"
+          ? parsedPayload.message
+          : rawText;
+        const normalizedMessage = incomingMessage?.toString().trim();
+        if (!normalizedMessage) {
+          socket.send("Please provide a message to send to the coach.");
+          return;
+        }
+        const message = normalizedMessage;
+        const origin = typeof parsedPayload?.origin === "string" ? parsedPayload.origin : "user";
+        const userId =
+          typeof parsedPayload?.userId === "string"
+            ? parsedPayload.userId
+            : process.env.MOCKBANK_USER_ID || "demo1";
     
         if (message.startsWith("gemini:")) {
           const geminiPrompt = message.replace("gemini:", "").trim();
