@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 import { Sidebar } from "./sidebar"
 import { Navbar } from "./navbar"
 
@@ -7,9 +7,18 @@ import { cn } from "@/lib/utils"
 
 import { TimeframeToolbar } from "./timeframe-toolbar"
 
+// Only render the TimeframeToolbar on pages that actually use the shared range
+const TIMEFRAME_ENABLED_PATHS = ["/transactions", "/insight", "/spending-categories"]
 
 export function Layout() {
   const { currentWallpaper } = useUser()
+  const location = useLocation()
+  const shouldShowTimeframe = TIMEFRAME_ENABLED_PATHS.some((path) => {
+    if (path === "/") {
+      return location.pathname === "/"
+    }
+    return location.pathname === path || location.pathname.startsWith(`${path}/`)
+  })
   
   return (
     <div className="flex h-screen overflow-hidden relative">
@@ -28,7 +37,7 @@ export function Layout() {
       {/* Main content area with navbar */}
       <div className="flex flex-1 flex-col min-w-0">
         <Navbar />
-        <TimeframeToolbar />
+        {shouldShowTimeframe && <TimeframeToolbar />}
         <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
